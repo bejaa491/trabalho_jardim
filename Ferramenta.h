@@ -1,54 +1,27 @@
-#ifndef PLANTA_H
-#define PLANTA_H
+#ifndef FERRAMENTA_H
+#define FERRAMENTA_H
 
 #include <string>
 
-enum class Beleza {
-    FEIA,
-    NEUTRA,
-    BONITA
-};
+class Posicao; // Forward declaration
 
-class Planta {
+class Ferramenta {
 protected:
-    int aguaAcumulada;
-    int nutrientesAcumulados;
-    int idade;
-    Beleza beleza;
-    int linhaPos;
-    int colunaPos;
-
-    int totalNutrientesAbsorvidos;
-    int totalAguaAbsorvida;
+    int numeroSerie;
+    static int contadorSerie;
 
 public:
-    Planta(int agua, int nutrientes, Beleza bel);
-    virtual ~Planta();
+    Ferramenta();
+    virtual ~Ferramenta();
 
-    // Métodos virtuais puros - devem ser implementados pelas subclasses
-    virtual void simular(int& aguaSolo, int& nutrientesSolo) = 0;
-    virtual bool deveMorrer() const = 0;
-    virtual Planta* tentatMultiplicar(int& aguaSolo, int& nutrientesSolo) = 0;
+    // Métodos virtuais puros
+    virtual bool usar(Posicao* pos) = 0;  // Retorna true se a ferramenta deve ser destruída
     virtual char getCaracter() const = 0;
     virtual std::string getTipo() const = 0;
-
-    // Métodos auxiliares
-    void incrementaIdade();
-    void setPosicao(int linha, int coluna);
+    virtual std::string getInfo() const = 0;
 
     // Getters
-    int getAgua() const;
-    int getNutrientes() const;
-    int getIdade() const;
-    Beleza getBeleza() const;
-    int getLinha() const;
-    int getColuna() const;
-    int getTotalNutrientes() const;
-    int getTotalAgua() const;
-
-    // Setters
-    void setAgua(int valor);
-    void setNutrientes(int valor);
+    int getNumeroSerie() const;
 };
 
 #endif
