@@ -289,7 +289,7 @@ bool Interface::comandoLarga(const std::vector<std::string>& partes) {
         return false;
     }
 
-    if (jardim->largarFerramenta()) {
+    if (jardim->jardineirolLarga()) {
         mostrarSucesso("Ferramenta largada com sucesso");
         jardim->imprimir();
         return true;
@@ -297,4 +297,88 @@ bool Interface::comandoLarga(const std::vector<std::string>& partes) {
 
     mostrarErro("Nao ha ferramenta para largar");
     return false;
+}
+
+void Interface::mostrarErro(const std::string& mensagem) {
+    std::cout << "[ERRO] " << mensagem << std::endl;
+}
+
+void Interface::mostrarSucesso(const std::string& mensagem) {
+    std::cout << "[OK] " << mensagem << std::endl;
+}
+
+bool Interface::eNumero(const std::string& str, int& numero) {
+    try {
+        numero = std::stoi(str);
+        return true;
+    } catch (...) {
+        return false;
+    }
+}
+
+bool Interface::converterPosicao(const std::string& pos, int& linha, int& coluna) {
+    if (pos.size() != 2)
+        return false;
+    linha = pos[0] - 'a';
+    coluna = pos[1] - 'a';
+    return linha >= 0 && linha < 26 && coluna >= 0 && coluna < 26;
+}
+
+bool Interface::comandoExecuta(const std::vector<std::string>& partes) {
+    if (partes.size() != 2) {
+        mostrarErro("Sintaxe: executa <nome-do-ficheiro>");
+        return false;
+    }
+    executarFicheiro(partes[1]);
+    return true;
+}
+
+bool Interface::comandoFim(const std::vector<std::string>& partes) {
+    if (partes.size() != 1) {
+        mostrarErro("Sintaxe: fim (sem parametros)");
+        return false;
+    }
+    mostrarSucesso("Encerrando simulador...");
+    executando = false;
+    return true;
+}
+
+bool Interface::comandoPega(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando 'pega' (a implementar)");
+    return true;
+}
+
+bool Interface::comandoCompra(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando 'compra' (a implementar)");
+    return true;
+}
+
+bool Interface::comandoMovimento(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando de movimento (a implementar)");
+    return true;
+}
+
+bool Interface::comandoEntra(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando 'entra' (a implementar)");
+    return true;
+}
+
+bool Interface::comandoSai(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando 'sai' (a implementar)");
+    return true;
+}
+
+bool Interface::comandoGrava(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando 'grava' (a implementar)");
+    return true;
+}
+
+bool Interface::comandoRecupera(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando 'recupera' (a implementar)");
+    return true;
+}
+
+bool Interface::comandoApaga(const std::vector<std::string>& partes) {
+    mostrarSucesso("Comando 'apaga' (a implementar)");
+    return true;
 }

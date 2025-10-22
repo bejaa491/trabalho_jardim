@@ -8,6 +8,15 @@ add_executable(trabalho_jardim
         Cato.cpp
         Interface.cpp
         Planta.cpp
+        Jardim.cpp
+        Posicao.cpp
+        Jardineiro.cpp
+        Ferramenta.cpp
+        Erva.cpp
+        Roseira.cpp
+        Regador.cpp
+        Adubo.cpp
+        Tesoura.cpp
         Adubo.h
         Cato.h
         Erva.h
