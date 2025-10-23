@@ -344,41 +344,112 @@ bool Interface::comandoFim(const std::vector<std::string>& partes) {
 }
 
 bool Interface::comandoPega(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando 'pega' (a implementar)");
+    if (partes.size() != 2) {
+        mostrarErro("Sintaxe: pega <posicao>");
+        return false;
+    }
+    int linha, coluna;
+    if (!converterPosicao(partes[1], linha, coluna)) {
+        mostrarErro("Posicao invalida. Use formato: a0..z0..z (ex: a1)");
+        return false;
+    }
+    mostrarSucesso("Comando 'pega' validado (stub)");
     return true;
 }
 
 bool Interface::comandoCompra(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando 'compra' (a implementar)");
+    if (partes.size() != 2) {
+        mostrarErro("Sintaxe: compra <tipo>");
+        return false;
+    }
+    if (partes[1].empty()) {
+        mostrarErro("Tipo invalido");
+        return false;
+    }
+    mostrarSucesso("Comando 'compra' validado (stub)");
     return true;
 }
 
 bool Interface::comandoMovimento(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando de movimento (a implementar)");
+    // comandos: e | d | c | b  [n]
+    if (partes.size() > 2) {
+        mostrarErro("Sintaxe: <e|d|c|b> [n]");
+        return false;
+    }
+    std::string cmd = partes[0];
+    if (cmd.size() != 1 || (cmd != "e" && cmd != "d" && cmd != "c" && cmd != "b")) {
+        mostrarErro("Direcao invalida. Use e, d, c ou b");
+        return false;
+    }
+    if (partes.size() == 2) {
+        int passos;
+        if (!eNumero(partes[1], passos) || passos < 1) {
+            mostrarErro("Numero de passos deve ser inteiro positivo");
+            return false;
+        }
+    }
+    mostrarSucesso("Comando de movimento validado (stub)");
     return true;
 }
 
 bool Interface::comandoEntra(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando 'entra' (a implementar)");
+    if (partes.size() != 2) {
+        mostrarErro("Sintaxe: entra <posicao>");
+        return false;
+    }
+    int linha, coluna;
+    if (!converterPosicao(partes[1], linha, coluna)) {
+        mostrarErro("Posicao invalida");
+        return false;
+    }
+    mostrarSucesso("Comando 'entra' validado (stub)");
     return true;
 }
 
 bool Interface::comandoSai(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando 'sai' (a implementar)");
+    if (partes.size() != 1) {
+        mostrarErro("Sintaxe: sai (sem parametros)");
+        return false;
+    }
+    mostrarSucesso("Comando 'sai' validado (stub)");
     return true;
 }
 
 bool Interface::comandoGrava(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando 'grava' (a implementar)");
+    if (partes.size() != 2) {
+        mostrarErro("Sintaxe: grava <nome-do-ficheiro>");
+        return false;
+    }
+    if (partes[1].empty()) {
+        mostrarErro("Nome de ficheiro invalido");
+        return false;
+    }
+    mostrarSucesso("Comando 'grava' validado (stub)");
     return true;
 }
 
 bool Interface::comandoRecupera(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando 'recupera' (a implementar)");
+    if (partes.size() != 2) {
+        mostrarErro("Sintaxe: recupera <nome-do-ficheiro>");
+        return false;
+    }
+    if (partes[1].empty()) {
+        mostrarErro("Nome de ficheiro invalido");
+        return false;
+    }
+    mostrarSucesso("Comando 'recupera' validado (stub)");
     return true;
 }
 
 bool Interface::comandoApaga(const std::vector<std::string>& partes) {
-    mostrarSucesso("Comando 'apaga' (a implementar)");
+    if (partes.size() != 2) {
+        mostrarErro("Sintaxe: apaga <nome-do-ficheiro>");
+        return false;
+    }
+    if (partes[1].empty()) {
+        mostrarErro("Nome de ficheiro invalido");
+        return false;
+    }
+    mostrarSucesso("Comando 'apaga' validado (stub)");
     return true;
 }
