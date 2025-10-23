@@ -241,8 +241,10 @@ void Jardim::listarFerramentas() const {
     std::cout << "\n=== Ferramentas ===\n";
     std::cout << "Ferramentas do jardineiro:\n";
     
-    const auto& ferrs = jardineiro->getFerramentas();
-    for (const auto* f : ferrs) {
+    Ferramenta** ferrs = jardineiro->getFerramentas();
+    int numF = jardineiro->getNumFerramentas();
+    for (int i = 0; i < numF; ++i) {
+        const Ferramenta* f = ferrs[i];
         std::cout << "  " << f->getInfo() << "\n";
     }
     

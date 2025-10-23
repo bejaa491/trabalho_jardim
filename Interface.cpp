@@ -51,75 +51,77 @@ void Interface::executarFicheiro(const std::string& nomeFicheiro) {
     mostrarSucesso("Ficheiro executado com sucesso");
 }
 
-std::vector<std::string> Interface::dividirComando(const std::string& linha) {
-    std::vector<std::string> partes;
-    std::istringstream iss(linha);
+std::string* Interface::dividirComando(const std::string& linha, int& outCount) {
+    outCount = 0;
+    std::istringstream issCount(linha);
     std::string palavra;
-    
-    while (iss >> palavra) {
-        // Converter para minúsculas
+    while (issCount >> palavra) outCount++;
+    if (outCount == 0) return nullptr;
+
+    std::string* partes = new std::string[outCount];
+    std::istringstream issFill(linha);
+    int idx = 0;
+    while (issFill >> palavra) {
         std::transform(palavra.begin(), palavra.end(), palavra.begin(), ::tolower);
-        partes.push_back(palavra);
+        partes[idx++] = palavra;
     }
-    
     return partes;
 }
 
 bool Interface::processarComando(const std::string& linha) {
-    std::vector<std::string> partes = dividirComando(linha);
-    
-    if (partes.empty()) {
+    int n = 0;
+    std::string* partes = dividirComando(linha, n);
+    if (n == 0 || partes == nullptr) {
+        delete[] partes;
         return false;
     }
-    
+
     std::string comando = partes[0];
-    
+    bool res = false;
+
     // Comandos que podem ser executados antes de criar o jardim
-    if (comando == "jardim") {
-        return comandoJardim(partes);
-    }
-    if (comando == "executa") {
-        return comandoExecuta(partes);
-    }
-    if (comando == "fim") {
-        return comandoFim(partes);
-    }
-    
+    if (comando == "jardim") { res = comandoJardim(partes, n); delete[] partes; return res; }
+    if (comando == "executa") { res = comandoExecuta(partes, n); delete[] partes; return res; }
+    if (comando == "fim") { res = comandoFim(partes, n); delete[] partes; return res; }
+
     // Verificar se o jardim foi criado
     if (!jardim->foiCriado()) {
         mostrarErro("Jardim ainda nao foi criado. Use 'jardim <linhas> <colunas>'");
+        delete[] partes;
         return false;
     }
-    
+
     // Processar outros comandos
-    if (comando == "avanca") return comandoAvanca(partes);
-    if (comando == "lplantas") return comandoLPlantas(partes);
-    if (comando == "lplanta") return comandoLPlanta(partes);
-    if (comando == "larea") return comandoLArea(partes);
-    if (comando == "lsolo") return comandoLSolo(partes);
-    if (comando == "lferr") return comandoLFerr(partes);
-    if (comando == "colhe") return comandoColhe(partes);
-    if (comando == "planta") return comandoPlanta(partes);
-    if (comando == "larga") return comandoLarga(partes);
-    if (comando == "pega") return comandoPega(partes);
-    if (comando == "compra") return comandoCompra(partes);
-    if (comando == "e" || comando == "d" || comando == "c" || comando == "b") {
-        return comandoMovimento(partes);
+    if (comando == "avanca") res = comandoAvanca(partes, n);
+    else if (comando == "lplantas") res = comandoLPlantas(partes, n);
+    else if (comando == "lplanta") res = comandoLPlanta(partes, n);
+    else if (comando == "larea") res = comandoLArea(partes, n);
+    else if (comando == "lsolo") res = comandoLSolo(partes, n);
+    else if (comando == "lferr") res = comandoLFerr(partes, n);
+    else if (comando == "colhe") res = comandoColhe(partes, n);
+    else if (comando == "planta") res = comandoPlanta(partes, n);
+    else if (comando == "larga") res = comandoLarga(partes, n);
+    else if (comando == "pega") res = comandoPega(partes, n);
+    else if (comando == "compra") res = comandoCompra(partes, n);
+    else if (comando == "e" || comando == "d" || comando == "c" || comando == "b") res = comandoMovimento(partes, n);
+    else if (comando == "entra") res = comandoEntra(partes, n);
+    else if (comando == "sai") res = comandoSai(partes, n);
+    else if (comando == "grava") res = comandoGrava(partes, n);
+    else if (comando == "recupera") res = comandoRecupera(partes, n);
+    else if (comando == "apaga") res = comandoApaga(partes, n);
+    else {
+        mostrarErro("Comando desconhecido: " + comando);
+        res = false;
     }
-    if (comando == "entra") return comandoEntra(partes);
-    if (comando == "sai") return comandoSai(partes);
-    if (comando == "grava") return comandoGrava(partes);
-    if (comando == "recupera") return comandoRecupera(partes);
-    if (comando == "apaga") return comandoApaga(partes);
-    
-    mostrarErro("Comando desconhecido: " + comando);
-    return false;
+
+    delete[] partes;
+    return res;
 }
 
 // ========== IMPLEMENTAÇÃO DOS COMANDOS ==========
 
-bool Interface::comandoJardim(const std::vector<std::string>& partes) {
-    if (partes.size() != 3) {
+bool Interface::comandoJardim(const std::string* partes, int n) {
+    if (n != 3) {
         mostrarErro("Sintaxe: jardim <linhas> <colunas>");
         return false;
     }
@@ -149,104 +151,94 @@ bool Interface::comandoJardim(const std::vector<std::string>& partes) {
     return false;
 }
 
-bool Interface::comandoAvanca(const std::vector<std::string>& partes) {
-    int n = 1;
-    
-    if (partes.size() > 2) {
+bool Interface::comandoAvanca(const std::string* partes, int n) {
+    int iter = 1;
+
+    if (n > 2) {
         mostrarErro("Sintaxe: avanca [n]");
         return false;
     }
-    
-    if (partes.size() == 2) {
-        if (!eNumero(partes[1], n) || n < 1) {
+
+    if (n == 2) {
+        if (!eNumero(partes[1], iter) || iter < 1) {
             mostrarErro("Numero de instantes deve ser inteiro positivo");
             return false;
         }
     }
-    
-    jardim->avancarTempo(n);
+
+    jardim->avancarTempo(iter);
     jardim->imprimir();
     return true;
 }
 
-bool Interface::comandoLPlantas(const std::vector<std::string>& partes) {
-    if (partes.size() != 1) {
+bool Interface::comandoLPlantas(const std::string* partes, int n) {
+    if (n != 1) {
         mostrarErro("Sintaxe: lplantas (sem parametros)");
         return false;
     }
-    
     jardim->listarPlantas();
     return true;
 }
 
-bool Interface::comandoLPlanta(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoLPlanta(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: lplanta <posicao>");
         return false;
     }
-    
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
         return false;
     }
-    
     jardim->listarPlanta(linha, coluna);
     return true;
 }
 
-bool Interface::comandoLArea(const std::vector<std::string>& partes) {
-    if (partes.size() != 1) {
+bool Interface::comandoLArea(const std::string* partes, int n) {
+    if (n != 1) {
         mostrarErro("Sintaxe: larea (sem parametros)");
         return false;
     }
-    
     jardim->listarArea();
     return true;
 }
 
-bool Interface::comandoLSolo(const std::vector<std::string>& partes) {
-    if (partes.size() < 2 || partes.size() > 3) {
+bool Interface::comandoLSolo(const std::string* partes, int n) {
+    if (n < 2 || n > 3) {
         mostrarErro("Sintaxe: lsolo <posicao> [raio]");
         return false;
     }
-    
     int linha, coluna, raio = 0;
     if (!converterPosicao(partes[1], linha, coluna)) {
         return false;
     }
-    
-    if (partes.size() == 3) {
+    if (n == 3) {
         if (!eNumero(partes[2], raio) || raio < 0) {
             mostrarErro("Raio deve ser inteiro nao-negativo");
             return false;
         }
     }
-    
     jardim->listarSolo(linha, coluna, raio);
     return true;
 }
 
-bool Interface::comandoLFerr(const std::vector<std::string>& partes) {
-    if (partes.size() != 1) {
+bool Interface::comandoLFerr(const std::string* partes, int n) {
+    if (n != 1) {
         mostrarErro("Sintaxe: lferr (sem parametros)");
         return false;
     }
-    
     jardim->listarFerramentas();
     return true;
 }
 
-bool Interface::comandoColhe(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoColhe(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: colhe <posicao>");
         return false;
     }
-    
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
         return false;
     }
-    
     if (jardim->colherPlanta(linha, coluna)) {
         jardim->imprimir();
         return true;
@@ -254,28 +246,24 @@ bool Interface::comandoColhe(const std::vector<std::string>& partes) {
     return false;
 }
 
-bool Interface::comandoPlanta(const std::vector<std::string>& partes) {
-    if (partes.size() != 3) {
+bool Interface::comandoPlanta(const std::string* partes, int n) {
+    if (n != 3) {
         mostrarErro("Sintaxe: planta <posicao> <tipo>");
         return false;
     }
-    
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
         return false;
     }
-    
     if (partes[2].length() != 1) {
         mostrarErro("Tipo deve ser um caracter: c, r, e, ou x");
         return false;
     }
-    
     char tipo = partes[2][0];
     if (tipo != 'c' && tipo != 'r' && tipo != 'e' && tipo != 'x') {
         mostrarErro("Tipo invalido. Use: c (cacto), r (roseira), e (erva), x (exotica)");
         return false;
     }
-    
     if (jardim->plantarPlanta(linha, coluna, tipo)) {
         jardim->imprimir();
         return true;
@@ -283,18 +271,16 @@ bool Interface::comandoPlanta(const std::vector<std::string>& partes) {
     return false;
 }
 
-bool Interface::comandoLarga(const std::vector<std::string>& partes) {
-    if (partes.size() != 1) {
+bool Interface::comandoLarga(const std::string* partes, int n) {
+    if (n != 1) {
         mostrarErro("Sintaxe: larga (sem parametros)");
         return false;
     }
-
     if (jardim->jardineirolLarga()) {
         mostrarSucesso("Ferramenta largada com sucesso");
         jardim->imprimir();
         return true;
     }
-
     mostrarErro("Nao ha ferramenta para largar");
     return false;
 }
@@ -324,8 +310,8 @@ bool Interface::converterPosicao(const std::string& pos, int& linha, int& coluna
     return linha >= 0 && linha < 26 && coluna >= 0 && coluna < 26;
 }
 
-bool Interface::comandoExecuta(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoExecuta(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: executa <nome-do-ficheiro>");
         return false;
     }
@@ -337,8 +323,8 @@ bool Interface::comandoExecuta(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoFim(const std::vector<std::string>& partes) {
-    if (partes.size() != 1) {
+bool Interface::comandoFim(const std::string* partes, int n) {
+    if (n != 1) {
         mostrarErro("Sintaxe: fim (sem parametros)");
         return false;
     }
@@ -347,8 +333,8 @@ bool Interface::comandoFim(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoPega(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoPega(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: pega <posicao>");
         return false;
     }
@@ -361,8 +347,8 @@ bool Interface::comandoPega(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoCompra(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoCompra(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: compra <tipo>");
         return false;
     }
@@ -374,9 +360,9 @@ bool Interface::comandoCompra(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoMovimento(const std::vector<std::string>& partes) {
+bool Interface::comandoMovimento(const std::string* partes, int n) {
     // comandos: e | d | c | b  [n]
-    if (partes.size() > 2) {
+    if (n > 2) {
         mostrarErro("Sintaxe: <e|d|c|b> [n]");
         return false;
     }
@@ -385,7 +371,7 @@ bool Interface::comandoMovimento(const std::vector<std::string>& partes) {
         mostrarErro("Direcao invalida. Use e, d, c ou b");
         return false;
     }
-    if (partes.size() == 2) {
+    if (n == 2) {
         int passos;
         if (!eNumero(partes[1], passos) || passos < 1) {
             mostrarErro("Numero de passos deve ser inteiro positivo");
@@ -396,8 +382,8 @@ bool Interface::comandoMovimento(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoEntra(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoEntra(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: entra <posicao>");
         return false;
     }
@@ -410,8 +396,8 @@ bool Interface::comandoEntra(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoSai(const std::vector<std::string>& partes) {
-    if (partes.size() != 1) {
+bool Interface::comandoSai(const std::string* partes, int n) {
+    if (n != 1) {
         mostrarErro("Sintaxe: sai (sem parametros)");
         return false;
     }
@@ -419,8 +405,8 @@ bool Interface::comandoSai(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoGrava(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoGrava(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: grava <nome-do-ficheiro>");
         return false;
     }
@@ -432,8 +418,8 @@ bool Interface::comandoGrava(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoRecupera(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoRecupera(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: recupera <nome-do-ficheiro>");
         return false;
     }
@@ -445,8 +431,8 @@ bool Interface::comandoRecupera(const std::vector<std::string>& partes) {
     return true;
 }
 
-bool Interface::comandoApaga(const std::vector<std::string>& partes) {
-    if (partes.size() != 2) {
+bool Interface::comandoApaga(const std::string* partes, int n) {
+    if (n != 2) {
         mostrarErro("Sintaxe: apaga <nome-do-ficheiro>");
         return false;
     }

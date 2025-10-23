@@ -1,8 +1,9 @@
 #ifndef POSICAO_H
 #define POSICAO_H
-#include "Posicao.h"
+
 #include "Planta.h"
 #include "Ferramenta.h"
+
 class Planta;
 class Ferramenta;
 
@@ -41,12 +42,8 @@ public:
     bool adicionarFerramenta(Ferramenta* f);
     Ferramenta* removerFerramenta();
 
-
     // Visualização
-    char getCaracterVisivel(bool jardineiroPresentte) const;
-
-
-
+    char getCaracterVisivel(bool jardineirosPresente) const;
 };
 
 #endif
