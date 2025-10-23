@@ -329,6 +329,10 @@ bool Interface::comandoExecuta(const std::vector<std::string>& partes) {
         mostrarErro("Sintaxe: executa <nome-do-ficheiro>");
         return false;
     }
+    if (partes[1].empty()) {
+        mostrarErro("Nome do ficheiro vazio");
+        return false;
+    }
     executarFicheiro(partes[1]);
     return true;
 }
@@ -350,7 +354,7 @@ bool Interface::comandoPega(const std::vector<std::string>& partes) {
     }
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
-        mostrarErro("Posicao invalida. Use formato: a0..z0..z (ex: a1)");
+        mostrarErro("Posicao invalida. Use formato: <letra><letra> (a..z)(a..z)");
         return false;
     }
     mostrarSucesso("Comando 'pega' validado (stub)");
@@ -399,7 +403,7 @@ bool Interface::comandoEntra(const std::vector<std::string>& partes) {
     }
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
-        mostrarErro("Posicao invalida");
+        mostrarErro("Posicao invalida. Use formato: <letra><letra> (a..z)(a..z)");
         return false;
     }
     mostrarSucesso("Comando 'entra' validado (stub)");
