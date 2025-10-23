@@ -315,10 +315,6 @@ bool Interface::comandoExecuta(const std::string* partes, int n) {
         mostrarErro("Sintaxe: executa <nome-do-ficheiro>");
         return false;
     }
-    if (partes[1].empty()) {
-        mostrarErro("Nome do ficheiro vazio");
-        return false;
-    }
     executarFicheiro(partes[1]);
     return true;
 }
