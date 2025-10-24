@@ -28,6 +28,7 @@ Jardineiro::~Jardineiro() {
     ferramentaNaMao = nullptr;
 }
 
+// Garante capacidade do array; realoca e copia elementos existentes.
 bool Jardineiro::garantirCapacidade(int novaCapacidade) {
     if (novaCapacidade <= capacidadeFerramentas) return true;
 
@@ -46,6 +47,7 @@ bool Jardineiro::garantirCapacidade(int novaCapacidade) {
     return true;
 }
 
+// Movimento simples com limites.
 bool Jardineiro::mover(int deltaLinha, int deltaColuna, int maxLinhas, int maxColunas) {
     if (!noJardim || !podeMover()) return false;
 
@@ -63,6 +65,7 @@ bool Jardineiro::mover(int deltaLinha, int deltaColuna, int maxLinhas, int maxCo
     return true;
 }
 
+// Entra no jardim numa posição válida.
 bool Jardineiro::entrar(int l, int c, int maxLinhas, int maxColunas) {
     if (noJardim || !podeEntrar()) return false;
     if (l < 0 || l >= maxLinhas || c < 0 || c >= maxColunas) return false;
@@ -74,6 +77,7 @@ bool Jardineiro::entrar(int l, int c, int maxLinhas, int maxColunas) {
     return true;
 }
 
+// Sai do jardim.
 bool Jardineiro::sair() {
     if (!noJardim || !podeSair()) return false;
 
@@ -84,6 +88,7 @@ bool Jardineiro::sair() {
     return true;
 }
 
+// Adiciona ferramenta ao inventário; expande array se necessário.
 void Jardineiro::adicionarFerramenta(Ferramenta* f) {
     if (f == nullptr) return;
 
@@ -95,6 +100,7 @@ void Jardineiro::adicionarFerramenta(Ferramenta* f) {
     ferramentas[numFerramentas++] = f;
 }
 
+// Pega ferramenta por número de série; faz shift left para manter array compacto.
 bool Jardineiro::pegarFerramenta(int numeroSerie) {
     if (ferramentaNaMao != nullptr) return false;
 
@@ -113,12 +119,14 @@ bool Jardineiro::pegarFerramenta(int numeroSerie) {
     return false;
 }
 
+// Larga ferramenta que está na mão (retorna ponteiro, jardineiro deixa de a possuir).
 Ferramenta* Jardineiro::largarFerramenta() {
     Ferramenta* temp = ferramentaNaMao;
     ferramentaNaMao = nullptr;
     return temp;
 }
 
+// Verificações de limites por turno (usam Settings).
 bool Jardineiro::podeColher() const {
     return plantasColhidasNoTurno < Settings::Jardineiro::max_colheitas;
 }
@@ -139,6 +147,7 @@ bool Jardineiro::podeSair() const {
     return saidasNoTurno < Settings::Jardineiro::max_entradas_saidas;
 }
 
+// Registos de ações no turno corrente.
 void Jardineiro::registarColheita() {
     plantasColhidasNoTurno++;
 }
@@ -147,6 +156,7 @@ void Jardineiro::registarPlantacao() {
     plantasPlantadasNoTurno++;
 }
 
+// Reseta contadores e movimentos para novo turno.
 void Jardineiro::novoTurno() {
     movimentosRestantes = Settings::Jardineiro::max_movimentos;
     plantasColhidasNoTurno = 0;
@@ -155,6 +165,7 @@ void Jardineiro::novoTurno() {
     saidasNoTurno = 0;
 }
 
+// Getters simples.
 int Jardineiro::getLinha() const { return linha; }
 int Jardineiro::getColuna() const { return coluna; }
 bool Jardineiro::estaNoJardim() const { return noJardim; }

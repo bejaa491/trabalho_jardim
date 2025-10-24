@@ -25,6 +25,7 @@ Jardim::~Jardim() {
     }
 }
 
+// Cria a grelha e inicializa solo/ferramentas iniciais.
 bool Jardim::criar(int linhas, int colunas) {
     if (area != nullptr) {
         return false;
@@ -47,6 +48,7 @@ bool Jardim::criar(int linhas, int colunas) {
     return true;
 }
 
+// Inicializa valores de água e nutrientes do solo.
 void Jardim::inicializarSolo() {
     for (int i = 0; i < numLinhas; i++) {
         for (int j = 0; j < numColunas; j++) {
@@ -61,6 +63,7 @@ void Jardim::inicializarSolo() {
     }
 }
 
+// Coloca um conjunto de ferramentas aleatórias no mapa.
 void Jardim::colocarFerramentasIniciais() {
     int numFerramentas = (numLinhas * numColunas) / 10;
     if (numFerramentas < 1) numFerramentas = 1;
@@ -70,6 +73,7 @@ void Jardim::colocarFerramentasIniciais() {
     }
 }
 
+// Tenta colocar uma ferramenta em posição aleatória livre.
 void Jardim::colocarFerramentaAleatoria() {
     int tentativas = 0;
     while (tentativas < 100) {
@@ -85,6 +89,7 @@ void Jardim::colocarFerramentaAleatoria() {
     }
 }
 
+// Cria nova ferramenta aleatória.
 Ferramenta* Jardim::criarFerramentaAleatoria() {
     int tipo = std::rand() % 3;
     switch (tipo) {
@@ -95,6 +100,7 @@ Ferramenta* Jardim::criarFerramentaAleatoria() {
     }
 }
 
+// Avança o simulador num dado número de instantes.
 void Jardim::avancarTempo(int instantes) {
     for (int i = 0; i < instantes; i++) {
         simularInstante();
@@ -102,6 +108,7 @@ void Jardim::avancarTempo(int instantes) {
     }
 }
 
+// Simula um instante: atualiza plantas e gera multiplicações.
 void Jardim::simularInstante() {
     jardineiro->novoTurno();
     
@@ -132,6 +139,7 @@ void Jardim::simularInstante() {
     }
 }
 
+// Tenta adicionar planta nova em vizinhança; retorna true se colocada.
 bool Jardim::adicionarPlantaVizinha(int linhaOrigem, int colunaOrigem, Planta* novaPlanta) {
     int direcoes[4][2] = {{-1,0}, {1,0}, {0,-1}, {0,1}};
     
@@ -150,6 +158,7 @@ bool Jardim::adicionarPlantaVizinha(int linhaOrigem, int colunaOrigem, Planta* n
     return false;
 }
 
+// Imprime o mapa do jardim.
 void Jardim::imprimir() const {
     std::cout << "\n=== Jardim (Instante: " << instanteAtual << ") ===\n";
     std::cout << "  ";
@@ -170,6 +179,7 @@ void Jardim::imprimir() const {
     }
 }
 
+// Lista plantas existentes (simples).
 void Jardim::listarPlantas() const {
     std::cout << "\n=== Plantas no Jardim ===\n";
     int total = 0;
@@ -189,6 +199,7 @@ void Jardim::listarPlantas() const {
     std::cout << "Total: " << total << " plantas\n";
 }
 
+// Mostra detalhes de uma planta.
 void Jardim::listarPlanta(int linha, int coluna) const {
     if (!posicaoValida(linha, coluna)) {
         std::cout << "Posicao invalida\n";
@@ -212,6 +223,7 @@ void Jardim::listarArea() const {
     imprimir();
 }
 
+// Lista solo numa posicao / raio.
 void Jardim::listarSolo(int linha, int coluna, int raio) const {
     if (!posicaoValida(linha, coluna)) {
         std::cout << "Posicao invalida\n";
@@ -237,6 +249,7 @@ void Jardim::listarSolo(int linha, int coluna, int raio) const {
     }
 }
 
+// Lista ferramentas do jardineiro (usa API sem vector).
 void Jardim::listarFerramentas() const {
     std::cout << "\n=== Ferramentas ===\n";
     std::cout << "Ferramentas do jardineiro:\n";
@@ -253,6 +266,7 @@ void Jardim::listarFerramentas() const {
     }
 }
 
+// Colhe planta com validações básicas.
 bool Jardim::colherPlanta(int linha, int coluna) {
     if (!posicaoValida(linha, coluna)) {
         std::cout << "Posicao invalida\n";
@@ -283,6 +297,7 @@ bool Jardim::colherPlanta(int linha, int coluna) {
     return true;
 }
 
+// Plante planta (valida tipo e presença).
 bool Jardim::plantarPlanta(int linha, int coluna, char tipo) {
     if (!posicaoValida(linha, coluna)) {
         std::cout << "Posicao invalida\n";
@@ -323,6 +338,7 @@ bool Jardim::plantarPlanta(int linha, int coluna, char tipo) {
     return true;
 }
 
+// Larga ferramenta na posição do jardineiro.
 bool Jardim::jardineirolLarga() {
     if (!jardineiro->estaNoJardim()) {
         return false;
@@ -353,6 +369,7 @@ bool Jardim::foiCriado() const {
     return area != nullptr;
 }
 
+// Liberta grelha alocada.
 void Jardim::liberarMemoria() {
     if (area != nullptr) {
         for (int i = 0; i < numLinhas; i++) {
