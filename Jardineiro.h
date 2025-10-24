@@ -1,7 +1,6 @@
 #ifndef JARDINEIRO_H
 #define JARDINEIRO_H
 
-#include <vector>
 #include "Ferramenta.h"
 
 class Jardineiro {
@@ -9,8 +8,10 @@ private:
     int linha;
     int coluna;
     bool noJardim;
-    
-    std::vector<Ferramenta*> ferramentas;
+    Ferramenta** ferramentas;    // array de ponteiros para ferramentas
+    int numFerramentas;          // numero actual de ferramentas
+    int capacidadeFerramentas;   // capacidade alocada
+
     Ferramenta* ferramentaNaMao;
     
     // Contadores por turno
@@ -19,6 +20,9 @@ private:
     int plantasPlantadasNoTurno;
     int entradasNoTurno;
     int saidasNoTurno;
+
+    // Helpers internos para gerir array dinamico
+    bool garantirCapacidade(int novaCapacidade);
 
 public:
     Jardineiro();
@@ -30,11 +34,16 @@ public:
     bool sair();
     
     // Ferramentas
-    void adicionarFerramenta(Ferramenta* f);
+    void adicionarFerramenta(Ferramenta* f); // adiciona (passa a propriedade)
     bool pegarFerramenta(int numeroSerie);
     Ferramenta* largarFerramenta();
     void usarFerramentaNaMao(Posicao* pos);
     
+    // Acesso às ferramentas (sem std::vector): devolve apontador para array interno
+    // e numero via getNumFerramentas()
+    Ferramenta** getFerramentas() const;
+    int getNumFerramentas() const;
+
     // Ações
     bool podeColher() const;
     bool podePlantar() const;
@@ -53,7 +62,6 @@ public:
     int getColuna() const;
     bool estaNoJardim() const;
     Ferramenta* getFerramentaNaMao() const;
-    const std::vector<Ferramenta*>& getFerramentas() const;
     int getMovimentosRestantes() const;
 };
 

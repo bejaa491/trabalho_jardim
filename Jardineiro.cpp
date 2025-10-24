@@ -1,16 +1,49 @@
 #include "Jardineiro.h"
 #include "Settings.h"
+#include <iostream>
+
+static const int JARDINEIRO_CAP_INICIAL = 4;
 
 Jardineiro::Jardineiro()
-    : linha(-1), coluna(-1), noJardim(false), ferramentaNaMao(nullptr),
+    : linha(-1), coluna(-1), noJardim(false),
+      ferramentas(nullptr), numFerramentas(0), capacidadeFerramentas(0),
+      ferramentaNaMao(nullptr),
       movimentosRestantes(0), plantasColhidasNoTurno(0),
-      plantasPlantadasNoTurno(0), entradasNoTurno(0), saidasNoTurno(0) {}
+      plantasPlantadasNoTurno(0), entradasNoTurno(0), saidasNoTurno(0) {
+    // Inicializa capacidade
+    garantirCapacidade(JARDINEIRO_CAP_INICIAL);
+}
 
 Jardineiro::~Jardineiro() {
-    for (auto* f : ferramentas) {
-        delete f;
+    // Libertar ferramentas guardadas no inventario
+    if (ferramentas != nullptr) {
+        for (int i = 0; i < numFerramentas; ++i) {
+            delete ferramentas[i];
+        }
+        delete[] ferramentas;
+        ferramentas = nullptr;
     }
+    // Ferramenta na mão é propriedade do jardineiro -> libertar se existir
     delete ferramentaNaMao;
+    ferramentaNaMao = nullptr;
+}
+
+bool Jardineiro::garantirCapacidade(int novaCapacidade) {
+    if (novaCapacidade <= capacidadeFerramentas) return true;
+
+    if (novaCapacidade < 1) novaCapacidade = JARDINEIRO_CAP_INICIAL;
+    Ferramenta** novo = new Ferramenta*[novaCapacidade];
+    for (int i = 0; i < novaCapacidade; ++i) novo[i] = nullptr;
+
+    // copiar existentes
+    for (int i = 0; i < numFerramentas; ++i) {
+        novo[i] = ferramentas[i];
+    }
+
+    delete[] ferramentas;
+    ferramentas = novo;
+    capacidadeFerramentas = novaCapacidade;
+    return true;
 }
 
 bool Jardineiro::mover(int deltaLinha, int deltaColuna, int maxLinhas, int maxColunas) {
@@ -52,16 +85,28 @@ bool Jardineiro::sair() {
 }
 
 void Jardineiro::adicionarFerramenta(Ferramenta* f) {
-    ferramentas.push_back(f);
+    if (f == nullptr) return;
+
+    if (numFerramentas + 1 > capacidadeFerramentas) {
+        int novaCap = capacidadeFerramentas * 2;
+        if (novaCap < 1) novaCap = JARDINEIRO_CAP_INICIAL;
+        garantirCapacidade(novaCap);
+    }
+    ferramentas[numFerramentas++] = f;
 }
 
 bool Jardineiro::pegarFerramenta(int numeroSerie) {
     if (ferramentaNaMao != nullptr) return false;
 
-    for (size_t i = 0; i < ferramentas.size(); i++) {
-        if (ferramentas[i]->getNumeroSerie() == numeroSerie) {
+    for (int i = 0; i < numFerramentas; ++i) {
+        if (ferramentas[i] != nullptr && ferramentas[i]->getNumeroSerie() == numeroSerie) {
             ferramentaNaMao = ferramentas[i];
-            ferramentas.erase(ferramentas.begin() + i);
+            // shift left
+            for (int j = i; j < numFerramentas - 1; ++j) {
+                ferramentas[j] = ferramentas[j + 1];
+            }
+            ferramentas[numFerramentas - 1] = nullptr;
+            --numFerramentas;
             return true;
         }
     }
@@ -114,5 +159,6 @@ int Jardineiro::getLinha() const { return linha; }
 int Jardineiro::getColuna() const { return coluna; }
 bool Jardineiro::estaNoJardim() const { return noJardim; }
 Ferramenta* Jardineiro::getFerramentaNaMao() const { return ferramentaNaMao; }
-const std::vector<Ferramenta*>& Jardineiro::getFerramentas() const { return ferramentas; }
+Ferramenta** Jardineiro::getFerramentas() const { return ferramentas; }
+int Jardineiro::getNumFerramentas() const { return numFerramentas; }
 int Jardineiro::getMovimentosRestantes() const { return movimentosRestantes; }

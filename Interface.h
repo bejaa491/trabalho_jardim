@@ -3,7 +3,7 @@
 
 #include "Jardim.h"
 #include <string>
-#include <vector>
+
 
 class Interface {
 private:
@@ -19,30 +19,30 @@ public:
     
 private:
     bool processarComando(const std::string& linha);
-    std::vector<std::string> dividirComando(const std::string& linha);
-    bool validarComando(const std::vector<std::string>& partes);
+    std::string* dividirComando(const std::string& linha, int& outCount); // new[] -> caller delete[]
+    bool validarComando(const std::string* partes, int n);
     
-    // Comandos específicos
-    bool comandoJardim(const std::vector<std::string>& partes);
-    bool comandoAvanca(const std::vector<std::string>& partes);
-    bool comandoLPlantas(const std::vector<std::string>& partes);
-    bool comandoLPlanta(const std::vector<std::string>& partes);
-    bool comandoLArea(const std::vector<std::string>& partes);
-    bool comandoLSolo(const std::vector<std::string>& partes);
-    bool comandoLFerr(const std::vector<std::string>& partes);
-    bool comandoColhe(const std::vector<std::string>& partes);
-    bool comandoPlanta(const std::vector<std::string>& partes);
-    bool comandoLarga(const std::vector<std::string>& partes);
-    bool comandoPega(const std::vector<std::string>& partes);
-    bool comandoCompra(const std::vector<std::string>& partes);
-    bool comandoMovimento(const std::vector<std::string>& partes);
-    bool comandoEntra(const std::vector<std::string>& partes);
-    bool comandoSai(const std::vector<std::string>& partes);
-    bool comandoGrava(const std::vector<std::string>& partes);
-    bool comandoRecupera(const std::vector<std::string>& partes);
-    bool comandoApaga(const std::vector<std::string>& partes);
-    bool comandoExecuta(const std::vector<std::string>& partes);
-    bool comandoFim(const std::vector<std::string>& partes);
+    // Comandos específicos (recebem array de tokens + numero de tokens)
+    bool comandoJardim(const std::string* partes, int n);
+    bool comandoAvanca(const std::string* partes, int n);
+    bool comandoLPlantas(const std::string* partes, int n);
+    bool comandoLPlanta(const std::string* partes, int n);
+    bool comandoLArea(const std::string* partes, int n);
+    bool comandoLSolo(const std::string* partes, int n);
+    bool comandoLFerr(const std::string* partes, int n);
+    bool comandoColhe(const std::string* partes, int n);
+    bool comandoPlanta(const std::string* partes, int n);
+    bool comandoLarga(const std::string* partes, int n);
+    bool comandoPega(const std::string* partes, int n);
+    bool comandoCompra(const std::string* partes, int n);
+    bool comandoMovimento(const std::string* partes, int n);
+    bool comandoEntra(const std::string* partes, int n);
+    bool comandoSai(const std::string* partes, int n);
+    bool comandoGrava(const std::string* partes, int n);
+    bool comandoRecupera(const std::string* partes, int n);
+    bool comandoApaga(const std::string* partes, int n);
+    bool comandoExecuta(const std::string* partes, int n);
+    bool comandoFim(const std::string* partes, int n);
     
     // Utilidades
     bool converterPosicao(const std::string& pos, int& linha, int& coluna);
