@@ -14,7 +14,7 @@ bool Regador::usar(Posicao* pos) {
     return true;
 }
 
-char Regador::getCaracter() const { return 'R'; }
+char Regador::getCaracter() const { return 'g'; }
 std::string Regador::getTipo() const { return "Regador"; }
 std::string Regador::getInfo() const { 
     return "Regador #" + std::to_string(numeroSerie) + 

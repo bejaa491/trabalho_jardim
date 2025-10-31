@@ -65,8 +65,8 @@ Ferramenta* Posicao::removerFerramenta() {
 }
 
 char Posicao::getCaracterVisivel(bool jardineirosPresente) const {
-    if (jardineirosPresente) return 'J';
+    if (jardineirosPresente) return '*';
     if (planta != nullptr) return planta->getCaracter();
     if (ferramenta != nullptr) return ferramenta->getCaracter();
-    return '.';
+    return ' ';
 }

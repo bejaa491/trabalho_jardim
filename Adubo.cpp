@@ -10,12 +10,12 @@ bool Adubo::usar(Posicao* pos) {
     if (quantidadeAdubo >= Settings::Adubo::dose) {
         pos->adicionarNutrientes(Settings::Adubo::dose);
         quantidadeAdubo -= Settings::Adubo::dose;
-        return false; // ainda existe adubo
+        return false;
     }
-    return true; // deve ser destruída quando vazio
+    return true;
 }
 
-char Adubo::getCaracter() const { return 'A'; }
+char Adubo::getCaracter() const { return 'a'; }
 std::string Adubo::getTipo() const { return "Adubo"; }
 std::string Adubo::getInfo() const { 
     return "Adubo #" + std::to_string(numeroSerie) + 

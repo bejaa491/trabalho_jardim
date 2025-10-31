@@ -8,13 +8,12 @@
 
 class Jardim {
 private:
-    Posicao** area;  // Array 2D de posições (alocação dinâmica)
+    Posicao** area;
     int numLinhas;
     int numColunas;
     int instanteAtual;
     Jardineiro* jardineiro;
     
-    // Cópias salvas
     std::map<std::string, Jardim*> copiasSalvas;
 
 public:
@@ -66,6 +65,7 @@ public:
     // Para multiplicação de plantas
     bool existePlantaVizinha(int linha, int coluna) const;
     bool adicionarPlantaVizinha(int linhaOrigem, int colunaOrigem, Planta* novaPlanta);
+    bool adicionarPlantaVizinhaMatando(int linhaOrigem, int colunaOrigem, Planta* novaPlanta);
     
 private:
     void liberarMemoria();

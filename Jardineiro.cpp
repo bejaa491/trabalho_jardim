@@ -125,6 +125,14 @@ Ferramenta* Jardineiro::largarFerramenta() {
     ferramentaNaMao = nullptr;
     return temp;
 }
+bool Jardineiro::usarFerramentaNaMao(Posicao* pos) {
+    if (!noJardim || ferramentaNaMao == nullptr || pos == nullptr) {
+        return false;
+    }
+    
+    ferramentaNaMao->usar(pos);
+    return true;
+}
 
 // Verificações de limites por turno (usam Settings).
 bool Jardineiro::podeColher() const {
