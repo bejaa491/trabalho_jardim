@@ -1,7 +1,7 @@
 === Comandos do Simulador de Jardim (POO 2025/2026) ===
 
 1. jardim <linhas> <colunas>
-   -> Cria o jardim com o tamanho especificado (máx. 26x26)
+   -> Cria o jardim com o tamanho especificado (1 a 26)
    Exemplo: jardim 10 12
 
 2. executa <ficheiro>
@@ -14,6 +14,7 @@
 
 4. avanca [n]
    -> Avança o tempo simulado n instantes (por omissão 1)
+   Nota: n deve ser inteiro positivo
    Exemplo: avanca 5
 
 5. lplantas
@@ -22,14 +23,16 @@
 
 6. lplanta <posicao>
    -> Mostra detalhes da planta na posição indicada
+   Nota: posição deve ser duas letras (aa-zz)
    Exemplo: lplanta bd
 
 7. larea
-   -> Lista as posições do jardim que contêm algo (plantas, ferramentas, etc.)
+   -> Lista as posições do jardim que contêm algo
    Exemplo: larea
 
 8. lsolo <posicao> [raio]
-   -> Mostra informações sobre o solo e conteúdo da posição (ou raio)
+   -> Mostra informações sobre o solo e conteúdo
+   Nota: raio deve ser inteiro não-negativo
    Exemplo: lsolo ac 2
 
 9. lferr
@@ -41,7 +44,12 @@
     Exemplo: colhe ab
 
 11. planta <posicao> <tipo>
-    -> Planta uma nova planta do tipo indicado (c = cacto, r = roseira, e = erva, x = exótica)
+    -> Planta uma nova planta do tipo indicado
+    Tipos válidos: 
+    - c = cacto
+    - r = roseira
+    - e = erva
+    - x = exótica
     Exemplo: planta bc r
 
 12. larga
@@ -50,10 +58,16 @@
 
 13. pega <n>
     -> Pega a ferramenta com o número de série indicado
+    Nota: número deve ser inteiro positivo
     Exemplo: pega 3
 
-14. compra <c>
-    -> Compra uma ferramenta do tipo indicado (g = regador, a = adubo, t = tesoura, z = ferramenta especial)
+14. compra <tipo>
+    -> Compra uma ferramenta do tipo indicado
+    Tipos válidos:
+    - g = regador
+    - a = adubo
+    - t = tesoura
+    - z = ferramenta especial
     Exemplo: compra g
 
 15. e
@@ -73,7 +87,7 @@
     Exemplo: b
 
 19. entra <posicao>
-    -> Faz o jardineiro entrar no jardim (ou teletransportar-se) para a posição indicada
+    -> Faz o jardineiro entrar no jardim na posição indicada
     Exemplo: entra cd
 
 20. sai
