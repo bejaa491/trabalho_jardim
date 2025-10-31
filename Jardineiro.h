@@ -37,7 +37,7 @@ public:
     void adicionarFerramenta(Ferramenta* f); // adiciona (passa a propriedade)
     bool pegarFerramenta(int numeroSerie);
     Ferramenta* largarFerramenta();
-    void usarFerramentaNaMao(Posicao* pos);
+    bool usarFerramentaNaMao(Posicao* pos);
     
     // Acesso às ferramentas (sem std::vector): devolve apontador para array interno
     // e numero via getNumFerramentas()
