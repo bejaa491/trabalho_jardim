@@ -1,0 +1,93 @@
+=== Comandos do Simulador de Jardim (POO 2025/2026) ===
+
+1. jardim <linhas> <colunas>
+   -> Cria o jardim com o tamanho especificado (máx. 26x26)
+   Exemplo: jardim 10 12
+
+2. executa <ficheiro>
+   -> Lê e executa comandos de um ficheiro de texto
+   Exemplo: executa comandos.txt
+
+3. fim
+   -> Termina o simulador de forma limpa
+   Exemplo: fim
+
+4. avanca [n]
+   -> Avança o tempo simulado n instantes (por omissão 1)
+   Exemplo: avanca 5
+
+5. lplantas
+   -> Lista todas as plantas existentes no jardim
+   Exemplo: lplantas
+
+6. lplanta <posicao>
+   -> Mostra detalhes da planta na posição indicada
+   Exemplo: lplanta bd
+
+7. larea
+   -> Lista as posições do jardim que contêm algo (plantas, ferramentas, etc.)
+   Exemplo: larea
+
+8. lsolo <posicao> [raio]
+   -> Mostra informações sobre o solo e conteúdo da posição (ou raio)
+   Exemplo: lsolo ac 2
+
+9. lferr
+   -> Lista as ferramentas que o jardineiro transporta
+   Exemplo: lferr
+
+10. colhe <posicao>
+    -> Colhe uma planta na posição indicada
+    Exemplo: colhe ab
+
+11. planta <posicao> <tipo>
+    -> Planta uma nova planta do tipo indicado (c = cacto, r = roseira, e = erva, x = exótica)
+    Exemplo: planta bc r
+
+12. larga
+    -> Larga a ferramenta que o jardineiro tem na mão
+    Exemplo: larga
+
+13. pega <n>
+    -> Pega a ferramenta com o número de série indicado
+    Exemplo: pega 3
+
+14. compra <c>
+    -> Compra uma ferramenta do tipo indicado (g = regador, a = adubo, t = tesoura, z = ferramenta especial)
+    Exemplo: compra g
+
+15. e
+    -> Move o jardineiro uma posição para a esquerda
+    Exemplo: e
+
+16. d
+    -> Move o jardineiro uma posição para a direita
+    Exemplo: d
+
+17. c
+    -> Move o jardineiro uma posição para cima
+    Exemplo: c
+
+18. b
+    -> Move o jardineiro uma posição para baixo
+    Exemplo: b
+
+19. entra <posicao>
+    -> Faz o jardineiro entrar no jardim (ou teletransportar-se) para a posição indicada
+    Exemplo: entra cd
+
+20. sai
+    -> Faz o jardineiro sair do jardim
+    Exemplo: sai
+
+21. grava <nome>
+    -> Guarda o estado atual do jardim com o nome indicado
+    Exemplo: grava teste1
+
+22. recupera <nome>
+    -> Recupera o estado do jardim guardado anteriormente
+    Exemplo: recupera teste1
+
+23. apaga <nome>
+    -> Apaga o estado guardado com o nome indicado
+    Exemplo: apaga teste1
