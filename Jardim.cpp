@@ -435,12 +435,28 @@ bool Jardim::moverJardineiro(char direcao) {
 }
 
 bool Jardim::jardineirosEntra(int linha, int coluna) {
-    if (!posicaoValida(linha, coluna)) {
-        std::cout << "Posicao invalida\n";
+    // Validações
+    if (!foiCriado()) {
         return false;
     }
-    
-    return jardineiro->entrar(linha, coluna, numLinhas, numColunas);
+
+    // Verifica se já existe jardineiro
+    if (jardineiro->estaNoJardim()) {
+        return false;
+    }
+
+    // Verifica limites do jardim
+    if (linha < 0 || linha >= numLinhas || coluna < 0 || coluna >= numColunas) {
+        return false;
+    }
+
+    // Tenta fazer o jardineiro entrar
+    if (jardineiro->entrar(linha, coluna, numLinhas, numColunas)) {
+        imprimir();
+        return true;
+    }
+
+    return false;
 }
 
 bool Jardim::jardineirosai() {
