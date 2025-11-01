@@ -67,6 +67,18 @@ class Settings {
         static const int nova_nutrientes = 5;
         static const int original_nutrientes = 5;
     };
+    class Cantora {
+        public:
+        static const int inicial_agua = 20;
+        static const int inicial_nutrientes = 20;
+        static const int absorcao_agua = 3;
+        static const int absorcao_nutrientes = 3;
+        static const int morre_agua_solo_menor = 10;
+        static const int raio_canto = 2;
+        static const int regeneracao_agua = 5;
+        static const int regeneracao_nutrientes = 5;
+        static const int multiplica_instantes = 5;
+    };
 };
 
 #endif //SETTINGS_SETTINGS_H

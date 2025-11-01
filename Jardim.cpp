@@ -2,9 +2,11 @@
 #include "Cato.h"
 #include "Roseira.h"
 #include "Erva.h"
+#include "Cantora.h"
 #include "Regador.h"
 #include "Adubo.h"
 #include "Tesoura.h"
+#include "Pulverizador.h"
 #include "Settings.h"
 #include <iostream>
 #include <iomanip>
@@ -12,7 +14,7 @@
 #include <ctime>
 #include <cstring>
 
-Jardim::Jardim() : area(nullptr), numLinhas(0), numColunas(0), 
+Jardim::Jardim() : area(nullptr), numLinhas(0), numColunas(0),
                    instanteAtual(0), jardineiro(nullptr) {
     std::srand(std::time(nullptr));
 }
@@ -20,7 +22,7 @@ Jardim::Jardim() : area(nullptr), numLinhas(0), numColunas(0),
 Jardim::~Jardim() {
     liberarMemoria();
     delete jardineiro;
-    
+
     for (auto& par : copiasSalvas) {
         delete par.second;
     }
@@ -30,32 +32,32 @@ bool Jardim::criar(int linhas, int colunas) {
     if (area != nullptr) {
         return false;
     }
-    
+
     numLinhas = linhas;
     numColunas = colunas;
     instanteAtual = 0;
-    
+
     area = new Posicao*[numLinhas];
     for (int i = 0; i < numLinhas; i++) {
         area[i] = new Posicao[numColunas];
     }
-    
+
     inicializarSolo();
     colocarFerramentasIniciais();
-    
+
     jardineiro = new Jardineiro();
-    
+
     return true;
 }
 
 void Jardim::inicializarSolo() {
     for (int i = 0; i < numLinhas; i++) {
         for (int j = 0; j < numColunas; j++) {
-            int agua = Settings::Jardim::agua_min + 
+            int agua = Settings::Jardim::agua_min +
                        (std::rand() % (Settings::Jardim::agua_max - Settings::Jardim::agua_min + 1));
-            int nutrientes = Settings::Jardim::nutrientes_min + 
+            int nutrientes = Settings::Jardim::nutrientes_min +
                             (std::rand() % (Settings::Jardim::nutrientes_max - Settings::Jardim::nutrientes_min + 1));
-            
+
             area[i][j].setAgua(agua);
             area[i][j].setNutrientes(nutrientes);
         }
@@ -64,7 +66,7 @@ void Jardim::inicializarSolo() {
 
 void Jardim::colocarFerramentasIniciais() {
     int numFerramentas = 3; // Como especificado no enunciado
-    
+
     for (int i = 0; i < numFerramentas; i++) {
         colocarFerramentaAleatoria();
     }
@@ -75,7 +77,7 @@ void Jardim::colocarFerramentaAleatoria() {
     while (tentativas < 100) {
         int linha = std::rand() % numLinhas;
         int coluna = std::rand() % numColunas;
-        
+
         if (!area[linha][coluna].temFerramenta()) {
             Ferramenta* f = criarFerramentaAleatoria();
             area[linha][coluna].adicionarFerramenta(f);
@@ -86,11 +88,12 @@ void Jardim::colocarFerramentaAleatoria() {
 }
 
 Ferramenta* Jardim::criarFerramentaAleatoria() {
-    int tipo = std::rand() % 3;
+    int tipo = std::rand() % 4;
     switch (tipo) {
         case 0: return new Regador();
         case 1: return new Adubo();
         case 2: return new Tesoura();
+        case 3: return new Pulverizador();
         default: return new Regador();
     }
 }
@@ -104,27 +107,63 @@ void Jardim::avancarTempo(int instantes) {
 
 void Jardim::simularInstante() {
     jardineiro->novoTurno();
-    
-    // Usar ferramenta na mão se jardineiro estiver no jardim
+
+    // === PULVERIZADOR: Degradar e usar ===
     if (jardineiro->estaNoJardim() && jardineiro->getFerramentaNaMao() != nullptr) {
-        int linha = jardineiro->getLinha();
-        int coluna = jardineiro->getColuna();
-        jardineiro->usarFerramentaNaMao(&area[linha][coluna]);
+        Pulverizador* pulv = dynamic_cast<Pulverizador*>(jardineiro->getFerramentaNaMao());
+        if (pulv != nullptr) {
+            // Degradar
+            pulv->degradar();
+
+            // Se ainda eficaz, eliminar ervas num raio de 1
+            if (!pulv->estaGasto()) {
+                int linhaJ = jardineiro->getLinha();
+                int colunaJ = jardineiro->getColuna();
+
+                for (int i = linhaJ - 1; i <= linhaJ + 1; i++) {
+                    for (int j = colunaJ - 1; j <= colunaJ + 1; j++) {
+                        if (posicaoValida(i, j)) {
+                            Planta* p = area[i][j].getPlanta();
+                            Erva* erva = dynamic_cast<Erva*>(p);
+                            if (erva != nullptr) {
+                                delete erva;
+                                area[i][j].removerPlanta();
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Ferramenta gasta - remover
+                jardineiro->largarFerramenta();
+                delete pulv;
+            }
+        }
     }
-    
+
+    // Usar ferramenta na mão se jardineiro estiver no jardim (outras ferramentas)
+    if (jardineiro->estaNoJardim() && jardineiro->getFerramentaNaMao() != nullptr) {
+        Pulverizador* pulv = dynamic_cast<Pulverizador*>(jardineiro->getFerramentaNaMao());
+        if (pulv == nullptr) { // Se não for pulverizador
+            int linha = jardineiro->getLinha();
+            int coluna = jardineiro->getColuna();
+            jardineiro->usarFerramentaNaMao(&area[linha][coluna]);
+        }
+    }
+
+    // === SIMULAÇÃO DE PLANTAS ===
     for (int i = 0; i < numLinhas; i++) {
         for (int j = 0; j < numColunas; j++) {
             Planta* p = area[i][j].getPlanta();
             if (p != nullptr) {
                 int agua = area[i][j].getAgua();
                 int nutrientes = area[i][j].getNutrientes();
-                
+
                 p->simular(agua, nutrientes);
                 p->incrementaIdade();
-                
+
                 area[i][j].setAgua(agua);
                 area[i][j].setNutrientes(nutrientes);
-                
+
                 if (p->deveMorrer()) {
                     // Cacto deixa nutrientes ao morrer
                     Cato* cato = dynamic_cast<Cato*>(p);
@@ -133,7 +172,7 @@ void Jardim::simularInstante() {
                         cato->deixarNutrientesNoSolo(nutSolo);
                         area[i][j].setNutrientes(nutSolo);
                     }
-                    
+
                     delete p;
                     area[i][j].removerPlanta();
                 } else {
@@ -149,16 +188,62 @@ void Jardim::simularInstante() {
                     }
                 }
             }
-            
+        }
+    }
+
+    // === FASE DAS CANTORAS ===
+
+    // 1. Cantoras cantam (regeneram plantas bonitas vizinhas)
+    for (int i = 0; i < numLinhas; i++) {
+        for (int j = 0; j < numColunas; j++) {
+            Planta* p = area[i][j].getPlanta();
+            Cantora* cantora = dynamic_cast<Cantora*>(p);
+            if (cantora != nullptr) {
+                cantora->cantar(area, i, j, numLinhas, numColunas);
+            }
+        }
+    }
+
+    // 2. Verificar morte e multiplicação de Cantoras
+    for (int i = 0; i < numLinhas; i++) {
+        for (int j = 0; j < numColunas; j++) {
+            Planta* p = area[i][j].getPlanta();
+            Cantora* cantora = dynamic_cast<Cantora*>(p);
+            if (cantora != nullptr) {
+                // Morte: água do solo < 10
+                if (area[i][j].getAgua() < Settings::Cantora::morre_agua_solo_menor) {
+                    delete cantora;
+                    area[i][j].removerPlanta();
+                    continue;
+                }
+
+                // Multiplicação: ao lado de planta bonita por 5 instantes
+                if (cantora->temPlantaBonitaVizinha(area, i, j, numLinhas, numColunas)) {
+                    cantora->incrementarContadorBonita();
+
+                    int agua = area[i][j].getAgua();
+                    int nutrientes = area[i][j].getNutrientes();
+                    Planta* nova = cantora->tentatMultiplicar(agua, nutrientes);
+                    if (nova != nullptr) {
+                        adicionarPlantaVizinha(i, j, nova);
+                    }
+                }
+            }
+        }
+    }
+
+    // === APANHAR FERRAMENTAS ===
+    for (int i = 0; i < numLinhas; i++) {
+        for (int j = 0; j < numColunas; j++) {
             // Apanhar ferramenta se jardineiro estiver na posição
-            if (jardineiro->estaNoJardim() && 
-                jardineiro->getLinha() == i && 
+            if (jardineiro->estaNoJardim() &&
+                jardineiro->getLinha() == i &&
                 jardineiro->getColuna() == j &&
                 area[i][j].temFerramenta()) {
-                
+
                 Ferramenta* f = area[i][j].removerFerramenta();
                 jardineiro->adicionarFerramenta(f);
-                
+
                 // Aparecer nova ferramenta aleatória
                 colocarFerramentaAleatoria();
             }
@@ -168,40 +253,40 @@ void Jardim::simularInstante() {
 
 bool Jardim::adicionarPlantaVizinha(int linhaOrigem, int colunaOrigem, Planta* novaPlanta) {
     int direcoes[4][2] = {{-1,0}, {1,0}, {0,-1}, {0,1}};
-    
+
     for (int i = 0; i < 4; i++) {
         int novaLinha = linhaOrigem + direcoes[i][0];
         int novaColuna = colunaOrigem + direcoes[i][1];
-        
+
         if (posicaoValida(novaLinha, novaColuna) && !area[novaLinha][novaColuna].temPlanta()) {
             area[novaLinha][novaColuna].adicionarPlanta(novaPlanta);
             novaPlanta->setPosicao(novaLinha, novaColuna);
             return true;
         }
     }
-    
+
     delete novaPlanta;
     return false;
 }
 
 bool Jardim::adicionarPlantaVizinhaMatando(int linhaOrigem, int colunaOrigem, Planta* novaPlanta) {
     int direcoes[4][2] = {{-1,0}, {1,0}, {0,-1}, {0,1}};
-    
+
     for (int i = 0; i < 4; i++) {
         int novaLinha = linhaOrigem + direcoes[i][0];
         int novaColuna = colunaOrigem + direcoes[i][1];
-        
+
         if (posicaoValida(novaLinha, novaColuna)) {
             // Matar planta existente se houver
             Planta* antiga = area[novaLinha][novaColuna].removerPlanta();
             delete antiga;
-            
+
             area[novaLinha][novaColuna].adicionarPlanta(novaPlanta);
             novaPlanta->setPosicao(novaLinha, novaColuna);
             return true;
         }
     }
-    
+
     delete novaPlanta;
     return false;
 }
@@ -213,18 +298,18 @@ void Jardim::imprimir() const {
         std::cout << (char)('A' + j);
     }
     std::cout << "\n";
-    
+
     for (int i = 0; i < numLinhas; i++) {
         std::cout << (char)('A' + i) << " ";
         for (int j = 0; j < numColunas; j++) {
-            bool jardineiro_aqui = jardineiro->estaNoJardim() && 
-                                   jardineiro->getLinha() == i && 
+            bool jardineiro_aqui = jardineiro->estaNoJardim() &&
+                                   jardineiro->getLinha() == i &&
                                    jardineiro->getColuna() == j;
             std::cout << area[i][j].getCaracterVisivel(jardineiro_aqui);
         }
         std::cout << " " << (char)('A' + i) << "\n";
     }
-    
+
     std::cout << "  ";
     for (int j = 0; j < numColunas; j++) {
         std::cout << (char)('A' + j);
@@ -235,23 +320,23 @@ void Jardim::imprimir() const {
 void Jardim::listarPlantas() const {
     std::cout << "\n=== Plantas no Jardim ===\n";
     int total = 0;
-    
+
     for (int i = 0; i < numLinhas; i++) {
         for (int j = 0; j < numColunas; j++) {
             Planta* p = area[i][j].getPlanta();
             if (p != nullptr) {
                 total++;
                 std::cout << (char)('a' + i) << (char)('a' + j)
-                          << " - " << p->getTipo() 
-                          << " (idade: " << p->getIdade() 
+                          << " - " << p->getTipo()
+                          << " (idade: " << p->getIdade()
                           << ", agua: " << p->getAgua()
                           << ", nutrientes: " << p->getNutrientes() << ")\n";
-                std::cout << "     Solo: agua=" << area[i][j].getAgua() 
+                std::cout << "     Solo: agua=" << area[i][j].getAgua()
                           << ", nutrientes=" << area[i][j].getNutrientes() << "\n";
             }
         }
     }
-    
+
     std::cout << "Total: " << total << " plantas\n";
 }
 
@@ -260,13 +345,13 @@ void Jardim::listarPlanta(int linha, int coluna) const {
         std::cout << "Posicao invalida\n";
         return;
     }
-    
+
     Planta* p = area[linha][coluna].getPlanta();
     if (p == nullptr) {
         std::cout << "Nao ha planta nesta posicao\n";
         return;
     }
-    
+
     std::cout << "\n=== Informacoes da Planta ===\n";
     std::cout << "Posicao: " << (char)('a' + linha) << (char)('a' + coluna) << "\n";
     std::cout << "Tipo: " << p->getTipo() << "\n";
@@ -277,14 +362,14 @@ void Jardim::listarPlanta(int linha, int coluna) const {
 
 void Jardim::listarArea() const {
     std::cout << "\n=== Area do Jardim ===\n";
-    
+
     for (int i = 0; i < numLinhas; i++) {
         for (int j = 0; j < numColunas; j++) {
             if (!area[i][j].estaVazia() || area[i][j].getAgua() > 0 || area[i][j].getNutrientes() > 0) {
                 std::cout << "Posicao " << (char)('a' + i) << (char)('a' + j) << ":\n";
-                std::cout << "  Agua: " << area[i][j].getAgua() 
+                std::cout << "  Agua: " << area[i][j].getAgua()
                           << ", Nutrientes: " << area[i][j].getNutrientes() << "\n";
-                
+
                 if (area[i][j].getPlanta() != nullptr) {
                     std::cout << "  Planta: " << area[i][j].getPlanta()->getTipo() << "\n";
                 }
@@ -301,14 +386,14 @@ void Jardim::listarSolo(int linha, int coluna, int raio) const {
         std::cout << "Posicao invalida\n";
         return;
     }
-    
+
     std::cout << "\n=== Informacoes do Solo ===\n";
-    
+
     if (raio == 0) {
         std::cout << "Posicao " << (char)('a' + linha) << (char)('a' + coluna) << ":\n";
         std::cout << "  Agua: " << area[linha][coluna].getAgua() << "\n";
         std::cout << "  Nutrientes: " << area[linha][coluna].getNutrientes() << "\n";
-        
+
         if (area[linha][coluna].getPlanta() != nullptr) {
             std::cout << "  Planta: " << area[linha][coluna].getPlanta()->getTipo() << "\n";
         }
@@ -322,7 +407,7 @@ void Jardim::listarSolo(int linha, int coluna, int raio) const {
                     std::cout << "Posicao " << (char)('a' + i) << (char)('a' + j) << ":\n";
                     std::cout << "  Agua: " << area[i][j].getAgua() << "\n";
                     std::cout << "  Nutrientes: " << area[i][j].getNutrientes() << "\n";
-                    
+
                     if (area[i][j].getPlanta() != nullptr) {
                         std::cout << "  Planta: " << area[i][j].getPlanta()->getTipo() << "\n";
                     }
@@ -337,21 +422,21 @@ void Jardim::listarSolo(int linha, int coluna, int raio) const {
 
 void Jardim::listarFerramentas() const {
     std::cout << "\n=== Ferramentas ===\n";
-    
+
     Ferramenta** ferrs = jardineiro->getFerramentas();
     int numF = jardineiro->getNumFerramentas();
-    
+
     if (numF == 0 && jardineiro->getFerramentaNaMao() == nullptr) {
         std::cout << "O jardineiro nao tem ferramentas\n";
         return;
     }
-    
+
     std::cout << "Ferramentas no inventario:\n";
     for (int i = 0; i < numF; ++i) {
         const Ferramenta* f = ferrs[i];
         std::cout << "  " << f->getInfo() << "\n";
     }
-    
+
     if (jardineiro->getFerramentaNaMao() != nullptr) {
         std::cout << "Na mao: " << jardineiro->getFerramentaNaMao()->getInfo() << "\n";
     } else {
@@ -364,18 +449,18 @@ bool Jardim::colherPlanta(int linha, int coluna) {
         std::cout << "Posicao invalida\n";
         return false;
     }
-    
+
     if (!jardineiro->podeColher()) {
         std::cout << "Limite de colheitas atingido neste turno\n";
         return false;
     }
-    
+
     Planta* p = area[linha][coluna].removerPlanta();
     if (p == nullptr) {
         std::cout << "Nao ha planta para colher\n";
         return false;
     }
-    
+
     delete p;
     jardineiro->registarColheita();
     std::cout << "Planta colhida com sucesso\n";
@@ -387,27 +472,28 @@ bool Jardim::plantarPlanta(int linha, int coluna, char tipo) {
         std::cout << "Posicao invalida\n";
         return false;
     }
-    
+
     if (!jardineiro->podePlantar()) {
         std::cout << "Limite de plantacoes atingido neste turno\n";
         return false;
     }
-    
+
     if (area[linha][coluna].temPlanta()) {
         std::cout << "Ja existe uma planta nesta posicao\n";
         return false;
     }
-    
+
     Planta* nova = nullptr;
     switch (tipo) {
         case 'c': nova = new Cato(); break;
         case 'r': nova = new Roseira(); break;
         case 'e': nova = new Erva(); break;
+        case 'x': nova = new Cantora(); break;
         default:
             std::cout << "Tipo de planta invalido\n";
             return false;
     }
-    
+
     area[linha][coluna].adicionarPlanta(nova);
     nova->setPosicao(linha, coluna);
     jardineiro->registarPlantacao();
@@ -420,9 +506,9 @@ bool Jardim::moverJardineiro(char direcao) {
         std::cout << "Jardineiro nao esta no jardim\n";
         return false;
     }
-    
+
     int deltaLinha = 0, deltaColuna = 0;
-    
+
     switch (direcao) {
         case 'c': deltaLinha = -1; break; // cima
         case 'b': deltaLinha = 1; break;  // baixo
@@ -430,7 +516,7 @@ bool Jardim::moverJardineiro(char direcao) {
         case 'd': deltaColuna = 1; break;  // direita
         default: return false;
     }
-    
+
     return jardineiro->mover(deltaLinha, deltaColuna, numLinhas, numColunas);
 }
 
@@ -471,20 +557,20 @@ bool Jardim::jardineirolLarga() {
     if (!jardineiro->estaNoJardim()) {
         return false;
     }
-    
+
     Ferramenta* f = jardineiro->largarFerramenta();
     if (f == nullptr) {
         return false;
     }
-    
+
     int linha = jardineiro->getLinha();
     int coluna = jardineiro->getColuna();
-    
+
     if (!area[linha][coluna].temFerramenta()) {
         area[linha][coluna].adicionarFerramenta(f);
         return true;
     }
-    
+
     // Se já existe ferramenta, devolve ao jardineiro
     jardineiro->adicionarFerramenta(f);
     return false;
@@ -492,17 +578,15 @@ bool Jardim::jardineirolLarga() {
 
 bool Jardim::comprarFerramenta(char tipo) {
     Ferramenta* nova = nullptr;
-    
+
     switch (tipo) {
         case 'g': nova = new Regador(); break;
         case 'a': nova = new Adubo(); break;
         case 't': nova = new Tesoura(); break;
-        case 'z': 
-            std::cout << "FerramentaZ ainda nao implementada\n";
-            return false;
+        case 'z': nova = new Pulverizador(); break;
         default: return false;
     }
-    
+
     jardineiro->adicionarFerramenta(nova);
     return true;
 }
@@ -514,13 +598,13 @@ bool Jardim::gravarCopia(const std::string& nome) {
         delete it->second;
         copiasSalvas.erase(it);
     }
-    
+
     // Criar cópia (implementação simplificada - copia estado atual)
     Jardim* copia = new Jardim();
     copia->numLinhas = numLinhas;
     copia->numColunas = numColunas;
     copia->instanteAtual = instanteAtual;
-    
+
     // Copiar área
     copia->area = new Posicao*[numLinhas];
     for (int i = 0; i < numLinhas; i++) {
@@ -531,7 +615,7 @@ bool Jardim::gravarCopia(const std::string& nome) {
             // TODO: Copiar plantas e ferramentas (deep copy)
         }
     }
-    
+
     copiasSalvas[nome] = copia;
     return true;
 }
@@ -542,16 +626,16 @@ bool Jardim::recuperarCopia(const std::string& nome) {
         std::cout << "Copia nao encontrada: " << nome << "\n";
         return false;
     }
-    
+
     // Libertar estado atual
     liberarMemoria();
-    
+
     // Copiar da cópia salva
     Jardim* copia = it->second;
     numLinhas = copia->numLinhas;
     numColunas = copia->numColunas;
     instanteAtual = copia->instanteAtual;
-    
+
     area = new Posicao*[numLinhas];
     for (int i = 0; i < numLinhas; i++) {
         area[i] = new Posicao[numColunas];
@@ -561,11 +645,11 @@ bool Jardim::recuperarCopia(const std::string& nome) {
             // TODO: Copiar plantas e ferramentas
         }
     }
-    
+
     // Apagar cópia
     delete copia;
     copiasSalvas.erase(it);
-    
+
     return true;
 }
 
@@ -575,7 +659,7 @@ bool Jardim::apagarCopia(const std::string& nome) {
         std::cout << "Copia nao encontrada: " << nome << "\n";
         return false;
     }
-    
+
     delete it->second;
     copiasSalvas.erase(it);
     return true;

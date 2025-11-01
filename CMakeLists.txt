@@ -17,6 +17,8 @@ add_executable(trabalho_jardim
         Regador.cpp
         Adubo.cpp
         Tesoura.cpp
+        Cantora.cpp
+        Pulverizador.cpp
         Adubo.h
         Cato.h
         Erva.h
@@ -30,4 +32,6 @@ add_executable(trabalho_jardim
         Roseira.h
         Settings.h
         Tesoura.h
+        Cantora.h
+        Pulverizador.h
 )
