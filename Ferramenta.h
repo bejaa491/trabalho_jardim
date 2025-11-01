@@ -14,7 +14,7 @@ public:
     Ferramenta();
     virtual ~Ferramenta();
 
-    // Métodos virtuais puros
+    // Métodos virtuais 
     virtual bool usar(Posicao* pos) = 0;  // Retorna true se a ferramenta deve ser destruída
     virtual char getCaracter() const = 0;
     virtual std::string getTipo() const = 0;
