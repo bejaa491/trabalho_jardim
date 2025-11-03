@@ -19,7 +19,7 @@ public:
     
 private:
     bool processarComando(const std::string& linha);
-    std::string* dividirComando(const std::string& linha, int& outCount); // new[] -> caller delete[]
+    std::string* dividirComando(const std::string& linha, int& outCount); 
     bool validarComando(const std::string* partes, int n);
     
     // Comandos específicos (recebem array de tokens + numero de tokens)
