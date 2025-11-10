@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
-#include <cstring>
+#include <string>
 
 Jardim::Jardim() : area(nullptr), numLinhas(0), numColunas(0),
                    instanteAtual(0), jardineiro(nullptr) {
