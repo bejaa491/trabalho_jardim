@@ -5,6 +5,12 @@
 Tesoura::Tesoura() {}
 Tesoura::~Tesoura() {}
 
+Ferramenta* Tesoura::clone() const {
+    Tesoura* t = new Tesoura();
+    t->setNumeroSerie(numeroSerie);
+    return t;
+}
+
 bool Tesoura::usar(Posicao* pos) {
     Planta* p = pos->getPlanta();
     if (p != nullptr && p->getBeleza() == Beleza::FEIA) {

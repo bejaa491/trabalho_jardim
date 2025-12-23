@@ -31,6 +31,12 @@ public:
     virtual Planta* tentatMultiplicar(int& aguaSolo, int& nutrientesSolo) = 0;
     virtual char getCaracter() const = 0;
     virtual std::string getTipo() const = 0;
+
+    // Clonagem
+    // clone() cria uma cópia profunda da planta (água, nutrientes, idade, totais)
+    // e devolve um novo objeto alocado com `new`. O chamador passa a ser responsável
+    // por libertar o objeto.
+    virtual Planta* clone() const = 0;
     
     // Métodos auxiliares
     void incrementaIdade();
@@ -49,6 +55,10 @@ public:
     // Setters
     void setAgua(int valor);
     void setNutrientes(int valor);
+
+    // Permitir clonar estado interno
+    void setTotalNutrientes(int v);
+    void setTotalAgua(int v);
 };
 
 #endif

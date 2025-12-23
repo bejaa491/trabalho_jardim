@@ -1,0 +1,11 @@
+jardim 4 4
+entra aa
+compra g
+lferr
+pega 4
+lferr
+grava snap-hand
+sai
+recupera snap-hand
+lferr
+fim

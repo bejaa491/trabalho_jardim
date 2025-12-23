@@ -17,6 +17,8 @@ public:
     Planta* tentatMultiplicar(int& aguaSolo, int& nutrientesSolo) override;
     char getCaracter() const override;
     std::string getTipo() const override;
+
+    Planta* clone() const override;
 };
 
 #endif

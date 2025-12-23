@@ -1,4 +1,5 @@
 #include "Roseira.h"
+#include "Jardim.h"
 
 Roseira::Roseira() 
     : Planta(Settings::Roseira::inicial_agua, 
@@ -49,3 +50,51 @@ Planta* Roseira::tentatMultiplicar(int& aguaSolo, int& nutrientesSolo) {
 
 char Roseira::getCaracter() const { return 'r'; }
 std::string Roseira::getTipo() const { return "Roseira"; }
+
+Planta* Roseira::clone() const {
+    Roseira* r = new Roseira();
+    r->setAgua(aguaAcumulada);
+    r->setNutrientes(nutrientesAcumulados);
+    for (int k = 0; k < idade; ++k) r->incrementaIdade();
+    r->setTotalNutrientes(totalNutrientesAbsorvidos);
+    r->setTotalAgua(totalAguaAbsorvida);
+    r->setPosicao(linhaPos, colunaPos);
+    // nota: jardimPtr será configurado pelo jardim que estiver a usar a cópia
+    return r;
+}
+
+// Adicionados: comportamento ao morrer e utilitários
+
+void Roseira::deixarRecursosNoSolo(int& aguaSolo, int& nutrientesSolo) {
+    // Devolve para o solo os recursos totais absorvidos durante a vida
+    aguaSolo += totalAguaAbsorvida;
+    nutrientesSolo += totalNutrientesAbsorvidos;
+    if (aguaSolo < 0) aguaSolo = 0;
+    if (nutrientesSolo < 0) nutrientesSolo = 0;
+}
+
+bool Roseira::todasVizinhasOcupadas() const {
+    if (jardimPtr == nullptr) return false;
+    Jardim* j = static_cast<Jardim*>(jardimPtr);
+
+    int linha = getLinha();
+    int coluna = getColuna();
+    int direcoes[4][2] = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+
+    for (int d = 0; d < 4; ++d) {
+        int nl = linha + direcoes[d][0];
+        int nc = coluna + direcoes[d][1];
+        if (j->posicaoValida(nl, nc)) {
+            const Posicao* pos = j->getPosicao(nl, nc);
+            if (!pos->temPlanta()) return false;
+        } else {
+            // Se posição inválida, consideramos ocupada (bordas contam como ocupadas)
+            continue;
+        }
+    }
+    return true;
+}
+
+void Roseira::setJardimPtr(void* jardim) {
+    jardimPtr = jardim;
+}

@@ -9,8 +9,10 @@ private:
 
 public:
     Pulverizador();
+    Pulverizador(int eficaciaInicial, int numeroSerie);
     ~Pulverizador() override;
     
+    Ferramenta* clone() const override;
     bool usar(Posicao* pos) override;
     char getCaracter() const override;
     std::string getTipo() const override;

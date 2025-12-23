@@ -21,8 +21,15 @@ public:
     ~Jardim();
     
     // Inicialização
+    // Cria a grelha do jardim com as dimensões especificadas e inicializa o solo.
+    // Retorna true se a criação for bem sucedida (invocar apenas uma vez por execução).
     bool criar(int linhas, int colunas);
+
+    // Inicializa água e nutrientes do solo com valores pseudo-aleatórios no intervalo definido
+    // em `Settings::Jardim`.
     void inicializarSolo();
+
+    // Coloca algumas ferramentas iniciais em posições aleatórias do jardim.
     void colocarFerramentasIniciais();
     
     // Simulação
@@ -60,6 +67,7 @@ public:
     bool posicaoValida(int linha, int coluna) const;
     Posicao* getPosicao(int linha, int coluna);
     const Posicao* getPosicao(int linha, int coluna) const;
+    void setPosicao(int linha, int coluna, const Posicao& p);
     bool foiCriado() const;
     
     // Para multiplicação de plantas

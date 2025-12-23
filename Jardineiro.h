@@ -39,6 +39,12 @@ public:
     Ferramenta* largarFerramenta();
     bool usarFerramentaNaMao(Posicao* pos);
     
+    // Define a ferramenta que o jardineiro tem na mão.
+    // O jardineiro passa a ser o proprietário do ponteiro `f` (o método apaga a ferramenta
+    // anteriormente na mão, se existir). Usado por `Jardim::recuperarCopia` para restaurar
+    // o estado do snapshot.
+    void setFerramentaNaMao(Ferramenta* f);
+
     // Acesso às ferramentas (sem std::vector): devolve apontador para array interno
     // e numero via getNumFerramentas()
     Ferramenta** getFerramentas() const;

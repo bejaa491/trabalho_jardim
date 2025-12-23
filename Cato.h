@@ -19,6 +19,7 @@ public:
     char getCaracter() const override;
     std::string getTipo() const override;
     
+    Planta* clone() const override;
     void deixarNutrientesNoSolo(int& nutrientesSolo);
 };
 

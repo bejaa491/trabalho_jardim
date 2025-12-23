@@ -14,7 +14,10 @@ public:
     Interface();
     ~Interface();
     
+    // Loop principal de leitura de comandos do utilizador (stdin).
     void executar();
+
+    // Executa comandos lidos de um ficheiro texto (linha por linha).
     void executarFicheiro(const std::string& nomeFicheiro);
     
 private:

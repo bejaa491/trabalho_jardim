@@ -49,6 +49,18 @@ std::string Cantora::getTipo() const {
     return "Cantora";
 }
 
+Planta* Cantora::clone() const {
+    Cantora* c = new Cantora();
+    c->setAgua(aguaAcumulada);
+    c->setNutrientes(nutrientesAcumulados);
+    for (int k = 0; k < idade; ++k) c->incrementaIdade();
+    c->setTotalNutrientes(totalNutrientesAbsorvidos);
+    c->setTotalAgua(totalAguaAbsorvida);
+    c->setPosicao(linhaPos, colunaPos);
+    c->instantesAoLadoDeBonita = instantesAoLadoDeBonita;
+    return c;
+}
+
 void Cantora::cantar(Posicao** area, int linha, int coluna, int maxLinhas, int maxColunas) {
     // Regenera +5 água e +5 nutrientes para plantas bonitas num raio de 2
     for (int i = linha - Settings::Cantora::raio_canto; i <= linha + Settings::Cantora::raio_canto; i++) {
@@ -65,7 +77,6 @@ void Cantora::cantar(Posicao** area, int linha, int coluna, int maxLinhas, int m
         }
     }
 }
-
 bool Cantora::temPlantaBonitaVizinha(Posicao** area, int linha, int coluna, 
                                       int maxLinhas, int maxColunas) {
     // Verifica vizinhos diretos (4 direções)

@@ -9,8 +9,11 @@ private:
 
 public:
     Regador();
+    // Construtor para clonagem com estado
+    Regador(int capacidade, int numeroSerie);
     ~Regador() override;
     
+    Ferramenta* clone() const override;
     bool usar(Posicao* pos) override;
     char getCaracter() const override;
     std::string getTipo() const override;

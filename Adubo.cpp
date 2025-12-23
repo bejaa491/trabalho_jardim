@@ -4,7 +4,17 @@
 #include <string>
 
 Adubo::Adubo() : quantidadeAdubo(Settings::Adubo::capacidade) {}
+
+Adubo::Adubo(int quantidade, int numeroSerie) : quantidadeAdubo(quantidade) {
+    setNumeroSerie(numeroSerie);
+}
+
 Adubo::~Adubo() {}
+
+Ferramenta* Adubo::clone() const {
+    Adubo* a = new Adubo(quantidadeAdubo, numeroSerie);
+    return a;
+}
 
 bool Adubo::usar(Posicao* pos) {
     if (quantidadeAdubo >= Settings::Adubo::dose) {

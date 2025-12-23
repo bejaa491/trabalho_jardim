@@ -44,3 +44,14 @@ Planta* Erva::tentatMultiplicar(int& aguaSolo, int& nutrientesSolo) {
 
 char Erva::getCaracter() const { return 'e'; }
 std::string Erva::getTipo() const { return "Erva Daninha"; }
+
+Planta* Erva::clone() const {
+    Erva* e = new Erva();
+    e->setAgua(aguaAcumulada);
+    e->setNutrientes(nutrientesAcumulados);
+    for (int k = 0; k < idade; ++k) e->incrementaIdade();
+    e->setTotalNutrientes(totalNutrientesAbsorvidos);
+    e->setTotalAgua(totalAguaAbsorvida);
+    e->setPosicao(linhaPos, colunaPos);
+    return e;
+}

@@ -15,6 +15,8 @@ public:
     char getCaracter() const override;
     std::string getTipo() const override;
     
+    Planta* clone() const override;
+    
     void deixarRecursosNoSolo(int& aguaSolo, int& nutrientesSolo);
     bool todasVizinhasOcupadas() const;
     void setJardimPtr(void* jardim);

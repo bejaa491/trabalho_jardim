@@ -3,7 +3,17 @@
 #include "Settings.h"
 
 Regador::Regador() : capacidadeAgua(Settings::Regador::capacidade) {}
+
+Regador::Regador(int capacidade, int numeroSerie) : capacidadeAgua(capacidade) {
+    setNumeroSerie(numeroSerie);
+}
+
 Regador::~Regador() {}
+
+Ferramenta* Regador::clone() const {
+    Regador* r = new Regador(capacidadeAgua, numeroSerie);
+    return r;
+}
 
 bool Regador::usar(Posicao* pos) {
     if (capacidadeAgua >= Settings::Regador::dose) {

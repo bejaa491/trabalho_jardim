@@ -57,3 +57,11 @@ void Planta::setAgua(int valor) {
 void Planta::setNutrientes(int valor) {
     nutrientesAcumulados = valor;
 }
+
+void Planta::setTotalNutrientes(int v) {
+    totalNutrientesAbsorvidos = v;
+}
+
+void Planta::setTotalAgua(int v) {
+    totalAguaAbsorvida = v;
+}

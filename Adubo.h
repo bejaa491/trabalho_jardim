@@ -9,8 +9,11 @@ private:
 
 public:
     Adubo();
+    // Construtor para clonagem
+    Adubo(int quantidade, int numeroSerie);
     ~Adubo() override;
     
+    Ferramenta* clone() const override;
     bool usar(Posicao* pos) override;
     char getCaracter() const override;
     std::string getTipo() const override;

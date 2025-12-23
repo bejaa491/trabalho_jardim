@@ -37,6 +37,7 @@ public:
     void removerNutrientes(int quantidade);
 
     // Gestão de plantas e ferramentas
+    // A posição assume propriedade do objeto passado (ou devolve-o no caso de remover)
     bool adicionarPlanta(Planta* p);
     Planta* removerPlanta();
     bool adicionarFerramenta(Ferramenta* f);

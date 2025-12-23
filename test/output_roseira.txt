@@ -1,0 +1,76 @@
+=== Simulador de Jardim - POO 2025/2026 ===
+Digite 'jardim <linhas> <colunas>' para comecar
+Digite 'fim' para sair
+
+> [OK] Jardim criado com 4x4
+
+=== Jardim (Instante: 0) ===
+  ABCD
+A ag   A
+B      B
+C g    C
+D      D
+  ABCD
+> Planta plantada com sucesso
+
+=== Jardim (Instante: 0) ===
+  ABCD
+A rg   A
+B      B
+C g    C
+D      D
+  ABCD
+> 
+=== Informacoes da Planta ===
+Posicao: aa
+Tipo: Roseira
+Idade: 0 instantes
+Agua acumulada: 25
+Nutrientes acumulados: 25
+> 
+=== Jardim (Instante: 100) ===
+  ABCD
+A ag   A
+B      B
+C g    C
+D      D
+  ABCD
+> Nao ha planta nesta posicao
+> 
+=== Area do Jardim ===
+Posicao aa:
+  Agua: 89, Nutrientes: 49
+  Ferramenta: Adubo #1 (100/100)
+Posicao ab:
+  Agua: 84, Nutrientes: 49
+  Ferramenta: Regador #2 (200/200)
+Posicao ac:
+  Agua: 87, Nutrientes: 47
+Posicao ad:
+  Agua: 92, Nutrientes: 45
+Posicao ba:
+  Agua: 96, Nutrientes: 40
+Posicao bb:
+  Agua: 81, Nutrientes: 40
+Posicao bc:
+  Agua: 80, Nutrientes: 47
+Posicao bd:
+  Agua: 92, Nutrientes: 47
+Posicao ca:
+  Agua: 97, Nutrientes: 41
+  Ferramenta: Regador #3 (200/200)
+Posicao cb:
+  Agua: 84, Nutrientes: 41
+Posicao cc:
+  Agua: 81, Nutrientes: 44
+Posicao cd:
+  Agua: 87, Nutrientes: 46
+Posicao da:
+  Agua: 80, Nutrientes: 47
+Posicao db:
+  Agua: 85, Nutrientes: 44
+Posicao dc:
+  Agua: 96, Nutrientes: 42
+Posicao dd:
+  Agua: 91, Nutrientes: 40
+> [OK] Encerrando simulador...

@@ -21,6 +21,8 @@ public:
     char getCaracter() const override;
     std::string getTipo() const override;
     
+    Planta* clone() const override;
+
     // Método especial para regenerar plantas bonitas
     void cantar(Posicao** area, int linha, int coluna, int maxLinhas, int maxColunas);
     

@@ -5,7 +5,16 @@
 
 Pulverizador::Pulverizador() : eficacia(100) {}
 
+Pulverizador::Pulverizador(int eficaciaInicial, int numeroSerie) : eficacia(eficaciaInicial) {
+    setNumeroSerie(numeroSerie);
+}
+
 Pulverizador::~Pulverizador() {}
+
+Ferramenta* Pulverizador::clone() const {
+    Pulverizador* p = new Pulverizador(eficacia, numeroSerie);
+    return p;
+}
 
 bool Pulverizador::usar(Posicao* pos) {
     // O uso real é feito pelo Jardim que tem acesso às posições vizinhas

@@ -125,6 +125,13 @@ Ferramenta* Jardineiro::largarFerramenta() {
     ferramentaNaMao = nullptr;
     return temp;
 }
+
+void Jardineiro::setFerramentaNaMao(Ferramenta* f) {
+    if (ferramentaNaMao != nullptr) {
+        delete ferramentaNaMao;
+    }
+    ferramentaNaMao = f;
+}
 bool Jardineiro::usarFerramentaNaMao(Posicao* pos) {
     if (!noJardim || ferramentaNaMao == nullptr || pos == nullptr) {
         return false;

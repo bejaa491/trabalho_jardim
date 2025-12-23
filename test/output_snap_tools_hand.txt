@@ -1,0 +1,65 @@
+=== Simulador de Jardim - POO 2025/2026 ===
+Digite 'jardim <linhas> <colunas>' para comecar
+Digite 'fim' para sair
+
+> [OK] Jardim criado com 4x4
+
+=== Jardim (Instante: 0) ===
+  ABCD
+A ag   A
+B      B
+C g    C
+D      D
+  ABCD
+> 
+=== Jardim (Instante: 0) ===
+  ABCD
+A *g   A
+B      B
+C g    C
+D      D
+  ABCD
+[OK] Jardineiro entrou no jardim
+
+=== Jardim (Instante: 0) ===
+  ABCD
+A *g   A
+B      B
+C g    C
+D      D
+  ABCD
+> [OK] Ferramenta comprada com sucesso
+> 
+=== Ferramentas ===
+Ferramentas no inventario:
+  Regador #4 (200/200)
+Nada na mao
+> [OK] Ferramenta #4 agora esta na mao
+> 
+=== Ferramentas ===
+Ferramentas no inventario:
+Na mao: Regador #4 (200/200)
+> [OK] Copia gravada com sucesso: snap-hand
+> [OK] Jardineiro saiu do jardim
+
+=== Jardim (Instante: 0) ===
+  ABCD
+A ag   A
+B      B
+C g    C
+D      D
+  ABCD
+> [OK] Copia recuperada com sucesso: snap-hand
+
+=== Jardim (Instante: 0) ===
+  ABCD
+A *g   A
+B      B
+C g    C
+D      D
+  ABCD
+> 
+=== Ferramentas ===
+Ferramentas no inventario:
+Na mao: Regador #4 (200/200)
+> [OK] Encerrando simulador...

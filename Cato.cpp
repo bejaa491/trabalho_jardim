@@ -81,6 +81,17 @@ std::string Cato::getTipo() const {
     return "Cacto";
 }
 
+Planta* Cato::clone() const {
+    Cato* c = new Cato();
+    c->setAgua(aguaAcumulada);
+    c->setNutrientes(nutrientesAcumulados);
+    for (int k = 0; k < idade; ++k) c->incrementaIdade();
+    c->setTotalNutrientes(totalNutrientesAbsorvidos);
+    c->setTotalAgua(totalAguaAbsorvida);
+    c->setPosicao(linhaPos, colunaPos);
+    return c;
+}
+
 void Cato::deixarNutrientesNoSolo(int& nutrientesSolo) {
     // Ao morrer, deixa todos os nutrientes absorvidos
     nutrientesSolo += totalNutrientesAbsorvidos;

@@ -173,6 +173,16 @@ void Jardim::simularInstante() {
                         area[i][j].setNutrientes(nutSolo);
                     }
 
+                    // Roseira deixa recursos ao morrer
+                    Roseira* rose = dynamic_cast<Roseira*>(p);
+                    if (rose != nullptr) {
+                        int aguaSolo = area[i][j].getAgua();
+                        int nutSolo = area[i][j].getNutrientes();
+                        rose->deixarRecursosNoSolo(aguaSolo, nutSolo);
+                        area[i][j].setAgua(aguaSolo);
+                        area[i][j].setNutrientes(nutSolo);
+                    }
+
                     delete p;
                     area[i][j].removerPlanta();
                 } else {
@@ -259,6 +269,10 @@ bool Jardim::adicionarPlantaVizinha(int linhaOrigem, int colunaOrigem, Planta* n
         int novaColuna = colunaOrigem + direcoes[i][1];
 
         if (posicaoValida(novaLinha, novaColuna) && !area[novaLinha][novaColuna].temPlanta()) {
+            // Se for Roseira, informar o ponteiro para o jardim
+            Roseira* rr = dynamic_cast<Roseira*>(novaPlanta);
+            if (rr != nullptr) rr->setJardimPtr(this);
+
             area[novaLinha][novaColuna].adicionarPlanta(novaPlanta);
             novaPlanta->setPosicao(novaLinha, novaColuna);
             return true;
@@ -280,6 +294,10 @@ bool Jardim::adicionarPlantaVizinhaMatando(int linhaOrigem, int colunaOrigem, Pl
             // Matar planta existente se houver
             Planta* antiga = area[novaLinha][novaColuna].removerPlanta();
             delete antiga;
+
+            // Se for Roseira, informar o ponteiro para o jardim
+            Roseira* rr = dynamic_cast<Roseira*>(novaPlanta);
+            if (rr != nullptr) rr->setJardimPtr(this);
 
             area[novaLinha][novaColuna].adicionarPlanta(novaPlanta);
             novaPlanta->setPosicao(novaLinha, novaColuna);
@@ -494,6 +512,10 @@ bool Jardim::plantarPlanta(int linha, int coluna, char tipo) {
             return false;
     }
 
+    // Se for Roseira, informar o ponteiro para o jardim
+    Roseira* rr = dynamic_cast<Roseira*>(nova);
+    if (rr != nullptr) rr->setJardimPtr(this);
+
     area[linha][coluna].adicionarPlanta(nova);
     nova->setPosicao(linha, coluna);
     jardineiro->registarPlantacao();
@@ -610,12 +632,32 @@ bool Jardim::gravarCopia(const std::string& nome) {
     for (int i = 0; i < numLinhas; i++) {
         copia->area[i] = new Posicao[numColunas];
         for (int j = 0; j < numColunas; j++) {
-            copia->area[i][j].setAgua(area[i][j].getAgua());
-            copia->area[i][j].setNutrientes(area[i][j].getNutrientes());
-            // TODO: Copiar plantas e ferramentas (deep copy)
+            // Preencher posição da cópia usando setPosicao (clona planta/ferramenta)
+            copia->setPosicao(i, j, area[i][j]);
         }
     }
 
+    // Copiar estado do jardineiro (posicao e inventario)
+    copia->jardineiro = new Jardineiro();
+    if (jardineiro != nullptr) {
+        if (jardineiro->estaNoJardim()) {
+            copia->jardineiro->entrar(jardineiro->getLinha(), jardineiro->getColuna(), copia->numLinhas, copia->numColunas);
+        }
+        Ferramenta** origFerr = jardineiro->getFerramentas();
+        int nF = jardineiro->getNumFerramentas();
+        for (int t = 0; t < nF; ++t) {
+            Ferramenta* of = origFerr[t];
+            Ferramenta* nf = nullptr;
+            if (of != nullptr) nf = of->clone();
+            if (nf != nullptr) copia->jardineiro->adicionarFerramenta(nf);
+        }
+        // Clonar ferramenta que está na mão (se existir)
+        Ferramenta* fmao = jardineiro->getFerramentaNaMao();
+        if (fmao != nullptr) {
+            Ferramenta* fclone = fmao->clone();
+            if (fclone != nullptr) copia->jardineiro->setFerramentaNaMao(fclone);
+        }
+    }
     copiasSalvas[nome] = copia;
     return true;
 }
@@ -640,9 +682,31 @@ bool Jardim::recuperarCopia(const std::string& nome) {
     for (int i = 0; i < numLinhas; i++) {
         area[i] = new Posicao[numColunas];
         for (int j = 0; j < numColunas; j++) {
-            area[i][j].setAgua(copia->area[i][j].getAgua());
-            area[i][j].setNutrientes(copia->area[i][j].getNutrientes());
-            // TODO: Copiar plantas e ferramentas
+            // Substitui posição inteira pelo conteúdo da cópia (clonando plantas/ferramentas)
+            setPosicao(i, j, copia->area[i][j]);
+        }
+    }
+
+    // Restaurar estado do jardineiro (substitui qualquer existente)
+    delete jardineiro;
+    jardineiro = new Jardineiro();
+    if (copia->jardineiro != nullptr) {
+        if (copia->jardineiro->estaNoJardim()) {
+            jardineiro->entrar(copia->jardineiro->getLinha(), copia->jardineiro->getColuna(), numLinhas, numColunas);
+        }
+        Ferramenta** fs = copia->jardineiro->getFerramentas();
+        int nF = copia->jardineiro->getNumFerramentas();
+        for (int t = 0; t < nF; ++t) {
+            Ferramenta* of = fs[t];
+            Ferramenta* nf = nullptr;
+            if (of != nullptr) nf = of->clone();
+            if (nf != nullptr) jardineiro->adicionarFerramenta(nf);
+        }
+        // Restaurar ferramenta que estava na mão
+        Ferramenta* fmao = copia->jardineiro->getFerramentaNaMao();
+        if (fmao != nullptr) {
+            Ferramenta* fclone = fmao->clone();
+            if (fclone != nullptr) jardineiro->setFerramentaNaMao(fclone);
         }
     }
 
@@ -689,4 +753,46 @@ char Jardim::indiceParaLetra(int indice) const {
 
 char Jardim::letraParaIndice(char letra) const {
     return letra - 'a';
+}
+
+Posicao* Jardim::getPosicao(int linha, int coluna) {
+    if (!posicaoValida(linha, coluna)) return nullptr;
+    return &area[linha][coluna];
+}
+//leitura
+const Posicao* Jardim::getPosicao(int linha, int coluna) const {
+    if (!posicaoValida(linha, coluna)) return nullptr;
+    return &area[linha][coluna];
+}
+
+void Jardim::setPosicao(int linha, int coluna, const Posicao& p) {
+    if (!posicaoValida(linha, coluna)) return;
+
+    // Solo
+    area[linha][coluna].setAgua(p.getAgua());
+    area[linha][coluna].setNutrientes(p.getNutrientes());
+
+    // Planta: remover existente e clonar a nova (se houver)
+    Planta* antiga = area[linha][coluna].removerPlanta();
+    delete antiga;
+    Planta* psrc = p.getPlanta();
+    if (psrc != nullptr) {
+        Planta* copia = psrc->clone();
+        if (copia != nullptr) {
+            // Se for Roseira, setar ponteiro para este jardim
+            Roseira* rr = dynamic_cast<Roseira*>(copia);
+            if (rr != nullptr) rr->setJardimPtr(this);
+            area[linha][coluna].adicionarPlanta(copia);
+            copia->setPosicao(linha, coluna);
+        }
+    }
+
+    // Ferramenta: remover existente e clonar a nova (se houver)
+    Ferramenta* fant = area[linha][coluna].removerFerramenta();
+    delete fant;
+    Ferramenta* fsrc = p.getFerramenta();
+    if (fsrc != nullptr) {
+        Ferramenta* fcopia = fsrc->clone();
+        if (fcopia != nullptr) area[linha][coluna].adicionarFerramenta(fcopia);
+    }
 }
