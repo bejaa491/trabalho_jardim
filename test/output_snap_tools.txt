@@ -29,17 +29,14 @@ C    a C
 D      D
   ABCD
 > [OK] Ferramenta comprada com sucesso
+> [OK] Ferramenta comprada com sucesso
 > 
 === Ferramentas ===
 Ferramentas no inventario:
   Regador #4 (200/200)
+  Adubo #5 (100/100)
 Nada na mao
-> [OK] Ferramenta #4 agora esta na mao
-> 
-=== Ferramentas ===
-Ferramentas no inventario:
-Na mao: Regador #4 (200/200)
-> [OK] Copia gravada com sucesso: snap-hand
+> [OK] Copia gravada com sucesso: snap
 > [OK] Jardineiro saiu do jardim
 
 === Jardim (Instante: 0) ===
@@ -49,7 +46,7 @@ B    z B
 C    a C
 D      D
   ABCD
-> [OK] Copia recuperada com sucesso: snap-hand
+> [OK] Copia recuperada com sucesso: snap
 
 === Jardim (Instante: 0) ===
   ABCD
@@ -61,5 +58,11 @@ D      D
 > 
 === Ferramentas ===
 Ferramentas no inventario:
-Na mao: Regador #4 (200/200)
+  Regador #4 (200/200)
+  Adubo #5 (100/100)
+Nada na mao
+> [OK] Copia gravada com sucesso: snap
+> [OK] Copia apagada com sucesso: snap
+> Copia nao encontrada: snap
+[ERRO] Nao foi possivel recuperar a copia
 > [OK] Encerrando simulador...

@@ -6,27 +6,27 @@ Digite 'fim' para sair
 
 === Jardim (Instante: 0) ===
   ABCD
-A ag   A
-B      B
-C g    C
+A   g  A
+B    z B
+C    a C
 D      D
   ABCD
 > Planta plantada com sucesso
 
 === Jardim (Instante: 0) ===
   ABCD
-A rg   A
-B      B
-C g    C
+A r g  A
+B    z B
+C    a C
 D      D
   ABCD
 > Planta plantada com sucesso
 
 === Jardim (Instante: 0) ===
   ABCD
-A rx   A
-B      B
-C g    C
+A rxg  A
+B    z B
+C    a C
 D      D
   ABCD
 > 
@@ -39,9 +39,9 @@ Nutrientes acumulados: 25
 > 
 === Jardim (Instante: 1) ===
   ABCD
-A rx   A
-B      B
-C g    C
+A rxg  A
+B    z B
+C    a C
 D      D
   ABCD
 > 
