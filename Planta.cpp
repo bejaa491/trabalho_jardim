@@ -65,3 +65,32 @@ void Planta::setTotalNutrientes(int v) {
 void Planta::setTotalAgua(int v) {
     totalAguaAbsorvida = v;
 }
+
+// Adiciona/Remove recursos de forma segura
+void Planta::adicionarAgua(int quantidade) {
+    aguaAcumulada += quantidade;
+    if (aguaAcumulada < 0) aguaAcumulada = 0;
+}
+
+void Planta::removerAgua(int quantidade) {
+    adicionarAgua(-quantidade);
+}
+
+void Planta::adicionarNutrientes(int quantidade) {
+    nutrientesAcumulados += quantidade;
+    if (nutrientesAcumulados < 0) nutrientesAcumulados = 0;
+}
+
+void Planta::removerNutrientes(int quantidade) {
+    adicionarNutrientes(-quantidade);
+}
+
+void Planta::adicionarTotalAgua(int quantidade) {
+    totalAguaAbsorvida += quantidade;
+    if (totalAguaAbsorvida < 0) totalAguaAbsorvida = 0;
+}
+
+void Planta::adicionarTotalNutrientes(int quantidade) {
+    totalNutrientesAbsorvidos += quantidade;
+    if (totalNutrientesAbsorvidos < 0) totalNutrientesAbsorvidos = 0;
+} 

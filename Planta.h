@@ -10,7 +10,7 @@ enum class Beleza {
 };
 
 class Planta {
-protected:
+private:
     int aguaAcumulada;
     int nutrientesAcumulados;
     int idade;
@@ -22,6 +22,13 @@ protected:
     int totalAguaAbsorvida;
 
 public:
+    // Operações seguras para alterar estado (substituem acesso direto aos campos)
+    void adicionarAgua(int quantidade);
+    void removerAgua(int quantidade);
+    void adicionarNutrientes(int quantidade);
+    void removerNutrientes(int quantidade);
+    void adicionarTotalAgua(int quantidade);
+    void adicionarTotalNutrientes(int quantidade);
     Planta(int agua, int nutrientes, Beleza bel);
     virtual ~Planta();
     

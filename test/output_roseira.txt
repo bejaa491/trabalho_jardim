@@ -7,18 +7,18 @@ Digite 'fim' para sair
 === Jardim (Instante: 0) ===
   ABCD
 A   g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 > Planta plantada com sucesso
 
 === Jardim (Instante: 0) ===
   ABCD
 A r g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 > 
 === Informacoes da Planta ===
@@ -31,46 +31,46 @@ Nutrientes acumulados: 25
 === Jardim (Instante: 100) ===
   ABCD
 A   g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 > Nao ha planta nesta posicao
 > 
 === Area do Jardim ===
 Posicao aa:
-  Agua: 85, Nutrientes: 48
+  Agua: 95, Nutrientes: 40
 Posicao ab:
-  Agua: 85, Nutrientes: 48
+  Agua: 100, Nutrientes: 49
 Posicao ac:
-  Agua: 81, Nutrientes: 47
-  Ferramenta: Regador #1 (200/200)
+  Agua: 80, Nutrientes: 46
+  Ferramenta: Regador #2 (200/200)
 Posicao ad:
-  Agua: 100, Nutrientes: 45
-Posicao ba:
-  Agua: 84, Nutrientes: 46
-Posicao bb:
   Agua: 97, Nutrientes: 45
+Posicao ba:
+  Agua: 94, Nutrientes: 44
+Posicao bb:
+  Agua: 81, Nutrientes: 45
 Posicao bc:
-  Agua: 87, Nutrientes: 47
+  Agua: 93, Nutrientes: 41
 Posicao bd:
-  Agua: 85, Nutrientes: 45
-  Ferramenta: Pulverizador #2 (eficacia: 100%)
+  Agua: 87, Nutrientes: 43
 Posicao ca:
-  Agua: 91, Nutrientes: 45
+  Agua: 83, Nutrientes: 46
 Posicao cb:
-  Agua: 80, Nutrientes: 47
+  Agua: 99, Nutrientes: 42
 Posicao cc:
-  Agua: 87, Nutrientes: 41
+  Agua: 91, Nutrientes: 44
 Posicao cd:
-  Agua: 91, Nutrientes: 42
-  Ferramenta: Adubo #3 (100/100)
+  Agua: 80, Nutrientes: 45
 Posicao da:
-  Agua: 91, Nutrientes: 45
+  Agua: 97, Nutrientes: 42
+  Ferramenta: Pulverizador #1 (eficacia: 100%)
 Posicao db:
-  Agua: 86, Nutrientes: 42
+  Agua: 89, Nutrientes: 44
 Posicao dc:
-  Agua: 88, Nutrientes: 49
+  Agua: 97, Nutrientes: 50
 Posicao dd:
-  Agua: 83, Nutrientes: 45
+  Agua: 99, Nutrientes: 48
+  Ferramenta: Adubo #3 (100/100)
 > [OK] Encerrando simulador...

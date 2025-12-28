@@ -7,26 +7,26 @@ Digite 'fim' para sair
 === Jardim (Instante: 0) ===
   ABCD
 A   g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 > 
 === Jardim (Instante: 0) ===
   ABCD
 A * g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 [OK] Jardineiro entrou no jardim
 
 === Jardim (Instante: 0) ===
   ABCD
 A * g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 > [OK] Ferramenta comprada com sucesso
 > [OK] Ferramenta comprada com sucesso
@@ -42,18 +42,18 @@ Nada na mao
 === Jardim (Instante: 0) ===
   ABCD
 A   g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 > [OK] Copia recuperada com sucesso: snap
 
 === Jardim (Instante: 0) ===
   ABCD
 A * g  A
-B    z B
-C    a C
-D      D
+B      B
+C      C
+D z  a D
   ABCD
 > 
 === Ferramentas ===

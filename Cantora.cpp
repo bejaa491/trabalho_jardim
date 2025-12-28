@@ -16,13 +16,13 @@ void Cantora::simular(int& aguaSolo, int& nutrientesSolo) {
     int nutrientesAbsorvidos = (nutrientesSolo >= Settings::Cantora::absorcao_nutrientes)
                                ? Settings::Cantora::absorcao_nutrientes : nutrientesSolo;
     
-    aguaAcumulada += aguaAbsorvida;
-    nutrientesAcumulados += nutrientesAbsorvidos;
+    adicionarAgua(aguaAbsorvida);
+    adicionarNutrientes(nutrientesAbsorvidos);
     aguaSolo -= aguaAbsorvida;
     nutrientesSolo -= nutrientesAbsorvidos;
     
-    totalAguaAbsorvida += aguaAbsorvida;
-    totalNutrientesAbsorvidos += nutrientesAbsorvidos;
+    adicionarTotalAgua(aguaAbsorvida);
+    adicionarTotalNutrientes(nutrientesAbsorvidos);
 }
 
 bool Cantora::deveMorrer() const {
@@ -51,12 +51,12 @@ std::string Cantora::getTipo() const {
 
 Planta* Cantora::clone() const {
     Cantora* c = new Cantora();
-    c->setAgua(aguaAcumulada);
-    c->setNutrientes(nutrientesAcumulados);
-    for (int k = 0; k < idade; ++k) c->incrementaIdade();
-    c->setTotalNutrientes(totalNutrientesAbsorvidos);
-    c->setTotalAgua(totalAguaAbsorvida);
-    c->setPosicao(linhaPos, colunaPos);
+    c->setAgua(getAgua());
+    c->setNutrientes(getNutrientes());
+    for (int k = 0; k < getIdade(); ++k) c->incrementaIdade();
+    c->setTotalNutrientes(getTotalNutrientes());
+    c->setTotalAgua(getTotalAgua());
+    c->setPosicao(getLinha(), getColuna());
     c->instantesAoLadoDeBonita = instantesAoLadoDeBonita;
     return c;
 }
