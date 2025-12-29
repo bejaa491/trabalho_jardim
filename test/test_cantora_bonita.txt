@@ -1,0 +1,12 @@
+## TESTE 8: Cantora - Comportamento com planta bonita vizinha
+jardim 10 10
+planta dd r
+planta de x
+larea
+avanca 10
+lplanta de
+avanca 10
+lplanta de
+avanca 10
+lplantas
+fim

@@ -1,0 +1,13 @@
+## TESTE 10: Regador - Aumenta água no solo
+jardim 8 8
+planta dd r
+lsolo dd
+compra g
+pega 1
+entra dd
+usarferramenta
+lsolo dd
+avanca 1
+lsolo dd
+sai
+fim

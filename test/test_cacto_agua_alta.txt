@@ -1,0 +1,9 @@
+## TESTE 5: Cacto - Morte por água alta
+jardim 8 8
+planta cc c
+lplanta cc
+avanca 5
+lplanta cc
+avanca 10
+lplantas
+fim

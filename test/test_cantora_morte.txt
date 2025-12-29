@@ -1,0 +1,9 @@
+## TESTE 9: Cantora - Morte por pouca água
+jardim 10 10
+planta cc x
+lplanta cc
+avanca 20
+lplanta cc
+avanca 20
+lplantas
+fim

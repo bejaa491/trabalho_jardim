@@ -14,19 +14,32 @@
 #include <ctime>
 #include <string>
 
+/**
+ * Construtor do Jardim.
+ * Inicializa valores padrão e seed do gerador aleatório.
+ */
 Jardim::Jardim() : area(nullptr), numLinhas(0), numColunas(0),
                    instanteAtual(0), jardineiro(nullptr) {
     std::srand(std::time(nullptr));
 }
 
+/**
+ * Destrutor do Jardim.
+ * Liberta toda a memória alocada (área, jardineiro, snapshots).
+ */
 Jardim::~Jardim() {
     liberarMemoria();
     delete jardineiro;
 
+    // Liberta snapshots gravados
     for (auto& par : copiasSalvas) {
         delete par.second;
     }
 }
+
+// ============================================================================
+// INICIALIZAÇÃO
+// ============================================================================
 
 bool Jardim::criar(int linhas, int colunas) {
     if (area != nullptr) {
@@ -37,24 +50,33 @@ bool Jardim::criar(int linhas, int colunas) {
     numColunas = colunas;
     instanteAtual = 0;
 
+    // Aloca matriz 2D de posições
     area = new Posicao*[numLinhas];
     for (int i = 0; i < numLinhas; i++) {
         area[i] = new Posicao[numColunas];
     }
 
+    // Inicializa solo e coloca ferramentas iniciais
     inicializarSolo();
     colocarFerramentasIniciais();
 
+    // Cria jardineiro
     jardineiro = new Jardineiro();
 
     return true;
 }
 
+/**
+ * Inicializa água e nutrientes do solo com valores aleatórios.
+ * Cada posição recebe valores dentro dos intervals definidos em Settings.
+ */
 void Jardim::inicializarSolo() {
     for (int i = 0; i < numLinhas; i++) {
         for (int j = 0; j < numColunas; j++) {
+            // Gera água aleatória
             int agua = Settings::Jardim::agua_min +
                        (std::rand() % (Settings::Jardim::agua_max - Settings::Jardim::agua_min + 1));
+            // Gera nutrientes aleatórios
             int nutrientes = Settings::Jardim::nutrientes_min +
                             (std::rand() % (Settings::Jardim::nutrientes_max - Settings::Jardim::nutrientes_min + 1));
 
@@ -64,20 +86,30 @@ void Jardim::inicializarSolo() {
     }
 }
 
+/**
+ * Coloca 3 ferramentas iniciais em posições aleatórias.
+ * Como especificado no enunciado da disciplina.
+ */
 void Jardim::colocarFerramentasIniciais() {
-    int numFerramentas = 3; // Como especificado no enunciado
-
+    const int numFerramentas = 3;
     for (int i = 0; i < numFerramentas; i++) {
         colocarFerramentaAleatoria();
     }
 }
 
+/**
+ * Coloca uma única ferramenta aleatória em posição vazia aleatória.
+ * Tentativas limitadas a 100 para evitar loops infinitos.
+ */
 void Jardim::colocarFerramentaAleatoria() {
     int tentativas = 0;
-    while (tentativas < 100) {
+    const int MAX_TENTATIVAS = 100;
+    
+    while (tentativas < MAX_TENTATIVAS) {
         int linha = std::rand() % numLinhas;
         int coluna = std::rand() % numColunas;
 
+        // Coloca ferramenta se posição está vazia
         if (!area[linha][coluna].temFerramenta()) {
             Ferramenta* f = criarFerramentaAleatoria();
             area[linha][coluna].adicionarFerramenta(f);
@@ -87,6 +119,13 @@ void Jardim::colocarFerramentaAleatoria() {
     }
 }
 
+/**
+ * Cria uma ferramenta aleatória dos 4 tipos disponíveis.
+ * - Regador (33%)
+ * - Adubo (33%)
+ * - Tesoura (33%)
+ * - Pulverizador (1%)
+ */
 Ferramenta* Jardim::criarFerramentaAleatoria() {
     int tipo = std::rand() % 4;
     switch (tipo) {
@@ -108,14 +147,16 @@ void Jardim::avancarTempo(int instantes) {
 void Jardim::simularInstante() {
     jardineiro->novoTurno();
 
-    // === PULVERIZADOR: Degradar e usar ===
+    // === FERRAMENTAS NA MÃO ===
     if (jardineiro->estaNoJardim() && jardineiro->getFerramentaNaMao() != nullptr) {
-        Pulverizador* pulv = dynamic_cast<Pulverizador*>(jardineiro->getFerramentaNaMao());
+        Ferramenta* ferr = jardineiro->getFerramentaNaMao();
+        
+        Pulverizador* pulv = dynamic_cast<Pulverizador*>(ferr);
         if (pulv != nullptr) {
-            // Degradar
+            // Pulverizador: degradar e eliminar ervas em raio de 1
             pulv->degradar();
 
-            // Se ainda eficaz, eliminar ervas num raio de 1
+            // Se ainda eficaz, eliminar ervas vizinhas
             if (!pulv->estaGasto()) {
                 int linhaJ = jardineiro->getLinha();
                 int colunaJ = jardineiro->getColuna();
@@ -133,20 +174,21 @@ void Jardim::simularInstante() {
                     }
                 }
             } else {
-                // Ferramenta gasta - remover
-                jardineiro->largarFerramenta();
-                delete pulv;
+                // Ferramenta gasta - remover da mão e destruir
+                Ferramenta* f = jardineiro->largarFerramenta();
+                delete f;
             }
-        }
-    }
-
-    // Usar ferramenta na mão se jardineiro estiver no jardim (outras ferramentas)
-    if (jardineiro->estaNoJardim() && jardineiro->getFerramentaNaMao() != nullptr) {
-        Pulverizador* pulv = dynamic_cast<Pulverizador*>(jardineiro->getFerramentaNaMao());
-        if (pulv == nullptr) { // Se não for pulverizador
+        } else {
+            // Outras ferramentas: usar na posição atual
             int linha = jardineiro->getLinha();
             int coluna = jardineiro->getColuna();
-            jardineiro->usarFerramentaNaMao(&area[linha][coluna]);
+            bool deveDestruir = jardineiro->usarFerramentaNaMao(&area[linha][coluna]);
+            
+            // Se ferramenta deve ser destruída, remover e apagar
+            if (deveDestruir) {
+                Ferramenta* f = jardineiro->largarFerramenta();
+                delete f;
+            }
         }
     }
 

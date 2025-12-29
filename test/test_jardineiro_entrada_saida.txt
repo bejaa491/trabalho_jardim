@@ -1,0 +1,9 @@
+## TESTE 17: Jardineiro - Limite de entrada/saída (máx 1 por turno)
+jardim 10 10
+entra dd
+sai
+entra dd
+sai
+lplantas
+avanca 1
+fim

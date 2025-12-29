@@ -1,7 +1,0 @@
-jardim 4 4
-planta aa r
-lplanta aa
-avanca 100
-lplanta aa
-larea
-fim

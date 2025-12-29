@@ -1,0 +1,16 @@
+## TESTE 13: Pulverizador - Elimina ervas em raio 1
+jardim 8 8
+planta dd e
+planta de e
+planta ed e
+planta ec e
+planta ce e
+larea
+compra z
+pega 1
+entra dd
+larea
+avanca 10
+lplantas
+sai
+fim

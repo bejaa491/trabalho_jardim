@@ -1,0 +1,17 @@
+## TESTE 14: Jardineiro - Limite de movimento (máx 10 por turno)
+jardim 10 10
+entra dd
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+e
+novoTurno
+lplantas
+fim

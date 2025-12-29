@@ -1,0 +1,11 @@
+## TESTE 4: Cacto - Multiplicação
+jardim 10 10
+planta cc c
+lplanta cc
+avanca 10
+lplantas
+avanca 20
+lplantas
+avanca 20
+lplantas
+fim

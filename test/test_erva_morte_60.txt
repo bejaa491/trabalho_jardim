@@ -1,0 +1,11 @@
+## TESTE 7: Erva - Morte aos 60 instantes
+jardim 10 10
+planta cc e
+lplanta cc
+avanca 30
+lplanta cc
+avanca 30
+lplanta cc
+avanca 5
+lplantas
+fim

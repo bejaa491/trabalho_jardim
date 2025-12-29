@@ -1,0 +1,12 @@
+## TESTE 18: Jardineiro - Inventário de ferramentas
+jardim 10 10
+compra g
+compra a
+compra t
+compra z
+lferr
+pega 1
+lferr
+pega 2
+lferr
+fim

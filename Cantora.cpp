@@ -26,9 +26,10 @@ void Cantora::simular(int& aguaSolo, int& nutrientesSolo) {
 }
 
 bool Cantora::deveMorrer() const {
-    // Morre se o solo ficar com menos de 10 unidades de água
-    // Esta verificação será feita no Jardim antes de chamar simular
-    return false; // A verificação real é feita externamente
+    // Morre se tiver pouca água ou nutrientes
+    // Nota: verificação de água do solo é feita em simularInstante() do Jardim
+    return getAgua() < Settings::Cantora::inicial_agua / 2 ||
+           getNutrientes() < Settings::Cantora::inicial_nutrientes / 2;
 }
 
 Planta* Cantora::tentatMultiplicar(int& aguaSolo, int& nutrientesSolo) {

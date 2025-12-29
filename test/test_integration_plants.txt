@@ -1,0 +1,14 @@
+## TESTE 19: Simulação Integrada - Múltiplas plantas
+jardim 12 12
+planta cc r
+planta dd c
+planta ee e
+planta ff x
+lplantas
+avanca 5
+lplantas
+avanca 10
+lplantas
+avanca 20
+lplantas
+fim

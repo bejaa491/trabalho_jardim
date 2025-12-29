@@ -1,0 +1,18 @@
+## TESTE 16: Jardineiro - Limite de colheita (máx 5 por turno)
+jardim 10 10
+planta bb r
+planta bc r
+planta bd r
+planta be r
+planta bf r
+planta bg r
+entra bb
+colhe bb
+colhe bc
+colhe bd
+colhe be
+colhe bf
+colhe bg
+lplantas
+avanca 1
+fim

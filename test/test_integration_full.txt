@@ -1,0 +1,19 @@
+## TESTE 20: Simulação Integrada - Jardineiro com ferramentas
+jardim 10 10
+planta dd r
+planta de e
+planta ed c
+planta ee x
+compra g
+compra a
+compra t
+compra z
+lferr
+entra dd
+pega 1
+lferr
+avanca 3
+lplantas
+sai
+lferr
+fim

@@ -1,0 +1,13 @@
+## TESTE 12: Tesoura - Elimina ervas (FEIA)
+jardim 8 8
+planta dd e
+planta de r
+larea
+compra t
+pega 1
+entra dd
+larea
+avanca 5
+lplantas
+sai
+fim

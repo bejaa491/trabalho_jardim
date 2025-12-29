@@ -1,0 +1,10 @@
+## TESTE 3: Roseira - Morte por falta de Nutrientes
+jardim 5 5
+planta cc r
+avanca 3
+lplanta cc
+avanca 20
+lplanta cc
+avanca 30
+lplantas
+fim

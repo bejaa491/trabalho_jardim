@@ -1,0 +1,11 @@
+## TESTE 6: Erva - Multiplicação
+jardim 10 10
+planta cc e
+lplanta cc
+avanca 10
+lplantas
+avanca 10
+lplantas
+avanca 10
+lplantas
+fim

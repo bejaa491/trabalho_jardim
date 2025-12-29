@@ -1,0 +1,9 @@
+## TESTE 15: Jardineiro - Limite de plantação (máx 2 por turno)
+jardim 10 10
+entra cc
+planta cc r
+planta cd r
+planta ce r
+lplantas
+avanca 1
+fim

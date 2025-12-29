@@ -185,6 +185,7 @@ bool Interface::comandoLPlanta(const std::string* partes, int n) {
     }
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
+        mostrarErro("Posicao invalida. Use formato: <letra><letra> (valida para o jardim)");
         return false;
     }
     jardim->listarPlanta(linha, coluna);
@@ -207,6 +208,7 @@ bool Interface::comandoLSolo(const std::string* partes, int n) {
     }
     int linha, coluna, raio = 0;
     if (!converterPosicao(partes[1], linha, coluna)) {
+        mostrarErro("Posicao invalida. Use formato: <letra><letra> (valida para o jardim)");
         return false;
     }
     if (n == 3) {
@@ -235,6 +237,7 @@ bool Interface::comandoColhe(const std::string* partes, int n) {
     }
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
+        mostrarErro("Posicao invalida. Use formato: <letra><letra> (valida para o jardim)");
         return false;
     }
     if (jardim->colherPlanta(linha, coluna)) {
@@ -251,6 +254,7 @@ bool Interface::comandoPlanta(const std::string* partes, int n) {
     }
     int linha, coluna;
     if (!converterPosicao(partes[1], linha, coluna)) {
+        mostrarErro("Posicao invalida. Use formato: <letra><letra> (valida para o jardim)");
         return false;
     }
     if (partes[2].length() != 1) {
@@ -485,7 +489,19 @@ bool Interface::eNumero(const std::string& str, int& numero) {
 bool Interface::converterPosicao(const std::string& pos, int& linha, int& coluna) {
     if (pos.size() != 2)
         return false;
+    
     linha = pos[0] - 'a';
     coluna = pos[1] - 'a';
-    return linha >= 0 && linha < 26 && coluna >= 0 && coluna < 26;
+    
+    // Validação básica
+    if (linha < 0 || coluna < 0)
+        return false;
+    
+    // Se jardim foi criado, validar contra suas dimensões reais
+    if (jardim && jardim->foiCriado()) {
+        return jardim->posicaoValida(linha, coluna);
+    }
+    
+    // Senão, validar contra limites padrão (26x26 para a,b,...,z)
+    return linha < 26 && coluna < 26;
 }

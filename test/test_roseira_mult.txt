@@ -1,0 +1,11 @@
+## TESTE 1: Roseira - Multiplicação
+jardim 10 10
+planta cc r
+lplanta cc
+avanca 10
+lplantas
+avanca 20
+lplantas
+avanca 20
+lplantas
+fim

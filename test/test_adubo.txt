@@ -1,0 +1,12 @@
+## TESTE 11: Adubo - Aumenta nutrientes no solo
+jardim 8 8
+planta dd r
+lsolo dd
+compra a
+pega 1
+entra dd
+lsolo dd
+avanca 1
+lsolo dd
+sai
+fim

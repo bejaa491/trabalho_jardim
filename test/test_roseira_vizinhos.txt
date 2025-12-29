@@ -1,0 +1,13 @@
+## TESTE 2: Roseira - Morte por Vizinhos Ocupados
+jardim 5 5
+planta bb r
+planta bc r
+planta cb r
+planta cc r
+larea
+avanca 1
+lplantas
+avanca 20
+lplantas
+larea
+fim

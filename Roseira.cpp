@@ -30,7 +30,8 @@ void Roseira::simular(int& aguaSolo, int& nutrientesSolo) {
 bool Roseira::deveMorrer() const {
     return getAgua() < Settings::Roseira::morre_agua_menor ||
            getNutrientes() < Settings::Roseira::morre_nutrientes_menor ||
-           getNutrientes() > Settings::Roseira::morre_nutrientes_maior;
+           getNutrientes() > Settings::Roseira::morre_nutrientes_maior ||
+           todasVizinhasOcupadas();
 }
 
 Planta* Roseira::tentatMultiplicar(int& aguaSolo, int& nutrientesSolo) {
