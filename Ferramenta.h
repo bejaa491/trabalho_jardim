@@ -23,7 +23,12 @@
 class Posicao; // Forward declaration
 
 class Ferramenta {
-protected:
+    friend class Regador;
+    friend class Adubo;
+    friend class Tesoura;
+    friend class Pulverizador;
+
+private:
     int numeroSerie;                    /**< Identificador único da ferramenta */
     static int contadorSerie;           /**< Gerador de números de série únicos */
 
